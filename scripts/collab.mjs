@@ -163,7 +163,7 @@ function status(brief = false) {
   const worktree = git(['status', '--short'], 'not a git repository');
   const claims = claimFiles();
   console.log(`KOSX collaboration | HEAD ${head}`);
-  console.log(`真源: SOURCE_OF_TRUTH.md → docs/DECISIONS.md → docs/V1_SPEC.md → src/`);
+  console.log(`真源: SOURCE_OF_TRUTH.md → docs/DECISIONS.md → docs/V1_SPEC.md → index.html + assets/`);
   if (!brief) {
     console.log('\n工作区:');
     console.log(worktree || 'clean');
