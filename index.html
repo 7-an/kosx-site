@@ -1,0 +1,1312 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="KOSX.ai 网站信息架构与排版原型。">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="assets/logo/KOSX ICON White.png">
+  <title>KOSX.ai｜Website Framework</title>
+  <script>
+    (() => {
+      const route = window.location.hash.replace(/^#\/?/, "");
+      const isHomeEntry = !route || route === "home";
+      if (isHomeEntry) document.documentElement.classList.add("intro-pending");
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --paper: #0a0a0a;
+      --ink: #f7f7f5;
+      --muted: #9a9a9f;
+      --line: #2a2a2e;
+      --signal: #ff6a00;
+      --signal-deep: #ff3d00;
+      --signal-warm: #ffb347;
+      --fog: #8a8a8f;
+      --mist: #d0d0d0;
+      --white: #ffffff;
+      --black: #0a0a0a;
+      --surface: #1c1c1e;
+      --soft-surface: #111111;
+      --radius: 14px;
+      --max: 1440px;
+      --pad: clamp(18px, 2.2vw, 34px);
+      --display: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+      --body: "Helvetica Neue", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: auto; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--body);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    button, input, textarea, select { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button { color: inherit; }
+
+    html.intro-pending,
+    html.intro-pending body { overflow: hidden; }
+
+    .brand-intro {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      overflow: hidden;
+      background: var(--black);
+      color: var(--white);
+      isolation: isolate;
+    }
+    html.intro-pending .brand-intro { display: block; }
+    .brand-intro::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background-image:
+        radial-gradient(circle at 50% 50%, rgba(255, 106, 0, .08), transparent 24%),
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+      background-size: auto, 64px 64px, 64px 64px;
+      opacity: 0;
+    }
+    .brand-intro.is-playing::before { animation: introGridIn .35s .1s ease-out forwards; }
+    .intro-skip {
+      position: absolute;
+      top: 20px;
+      right: var(--pad);
+      z-index: 4;
+      padding: 8px 0 5px;
+      border: 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .45);
+      background: transparent;
+      color: rgba(255, 255, 255, .65);
+      cursor: pointer;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .intro-skip:hover,
+    .intro-skip:focus-visible { border-color: var(--signal); color: var(--signal); outline: 0; }
+    .intro-parent,
+    .intro-child {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      will-change: left, top, width, opacity, transform;
+    }
+    .intro-parent {
+      width: clamp(220px, 24vw, 330px);
+      opacity: 0;
+    }
+    .intro-parent-label {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--fog);
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+    .intro-kos-crop {
+      width: 100%;
+      aspect-ratio: 2.42 / 1;
+      overflow: hidden;
+    }
+    .intro-kos-crop img {
+      width: 100%;
+      height: auto;
+      filter: brightness(1.55);
+      transform: translateY(-1%);
+    }
+    .intro-connection {
+      position: absolute;
+      left: 35%;
+      right: 35%;
+      top: 50%;
+      height: 68px;
+      opacity: 1;
+      transform: translateY(-50%);
+    }
+    .intro-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 29px;
+      height: 1px;
+      background: rgba(255, 255, 255, .22);
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+    .intro-line::before,
+    .intro-line::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--signal);
+      box-shadow: 0 0 18px rgba(255, 106, 0, .75);
+      transform: translate(-50%, -50%);
+    }
+    .intro-line::before { left: 0; }
+    .intro-line::after { left: 100%; }
+    .intro-line-signal {
+      position: absolute;
+      left: 0;
+      top: -2px;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--signal);
+      box-shadow: 0 0 24px rgba(255, 106, 0, .9);
+      opacity: 0;
+    }
+    .intro-steps {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 42px;
+      color: var(--mist);
+      font-size: 8px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .intro-steps span { opacity: 0; transform: translateY(4px); }
+    .intro-parent,
+    .intro-connection,
+    .intro-child { z-index: 2; }
+    .intro-dawn {
+      position: absolute;
+      right: -28vw;
+      bottom: -48vw;
+      z-index: 0;
+      width: min(95vw, 1250px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 30%, rgba(255, 179, 71, .34) 0, rgba(255, 106, 0, .18) 20%, rgba(255, 61, 0, .07) 38%, transparent 61%);
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(.62) rotate(-10deg);
+      transform-origin: 74% 74%;
+      will-change: opacity, transform;
+    }
+    .intro-dawn::before {
+      content: "";
+      position: absolute;
+      inset: 14%;
+      border-radius: 50%;
+      border-top: 1px solid rgba(255, 179, 71, .72);
+      box-shadow:
+        0 -8px 40px rgba(255, 106, 0, .22),
+        inset 0 12px 32px rgba(255, 106, 0, .1);
+      transform: rotate(-22deg);
+    }
+    .intro-dawn::after {
+      content: "";
+      position: absolute;
+      left: -12%;
+      top: 22%;
+      width: 72%;
+      height: 18%;
+      background: linear-gradient(90deg, transparent, rgba(255, 106, 0, .14), rgba(255, 179, 71, .42), transparent);
+      filter: blur(18px);
+      transform: rotate(-38deg);
+    }
+    .intro-child {
+      left: 78%;
+      width: clamp(150px, 14vw, 210px);
+      opacity: 0;
+      text-align: center;
+    }
+    .intro-child img { width: 100%; height: auto; }
+    .intro-slogan {
+      margin: 18px 0 0;
+      color: var(--white);
+      font-size: clamp(10px, .85vw, 12px);
+      font-weight: 600;
+      letter-spacing: .18em;
+      opacity: 0;
+      white-space: nowrap;
+    }
+    .brand-intro.is-playing .intro-parent {
+      animation:
+        introParentIn .42s .08s cubic-bezier(.22, 1, .36, 1) forwards,
+        introParentShift .52s .56s cubic-bezier(.65, 0, .35, 1) forwards,
+        introParentFade .38s 1.83s ease forwards;
+    }
+    .brand-intro.is-playing .intro-line { animation: introLineGrow .72s .68s cubic-bezier(.65, 0, .35, 1) forwards; }
+    .brand-intro.is-playing .intro-line-signal { animation: introSignalTravel .72s .68s cubic-bezier(.65, 0, .35, 1) forwards; }
+    .brand-intro.is-playing .intro-steps span:nth-child(1) { animation: introStepIn .22s .76s ease-out forwards; }
+    .brand-intro.is-playing .intro-steps span:nth-child(2) { animation: introStepIn .22s 1.02s ease-out forwards; }
+    .brand-intro.is-playing .intro-steps span:nth-child(3) { animation: introStepIn .22s 1.28s ease-out forwards; }
+    .brand-intro.is-playing .intro-connection { animation: introConnectionFade .36s 1.84s ease forwards; }
+    .brand-intro.is-playing .intro-dawn { animation: introDawnRise 1.42s 1.3s cubic-bezier(.22, 1, .36, 1) forwards; }
+    .brand-intro.is-playing .intro-child {
+      animation:
+        introChildIn .34s 1.35s cubic-bezier(.22, 1, .36, 1) forwards,
+        introChildCenter .42s 1.86s cubic-bezier(.65, 0, .35, 1) forwards,
+        introChildDock .54s 2.58s cubic-bezier(.65, 0, .35, 1) forwards;
+    }
+    .brand-intro.is-playing .intro-slogan {
+      animation:
+        introSloganIn .28s 2.03s ease-out forwards,
+        introSloganOut .18s 2.58s ease-in forwards;
+    }
+    .brand-intro.is-playing { animation: introReveal .62s 2.92s ease-in-out forwards; }
+    .brand-intro.is-skipping { display: block; animation: introSkip .16s ease-out forwards; }
+    .brand-intro.is-reduced { display: block; animation: introSkip .15s .12s ease-out forwards; }
+    .brand-intro.is-reduced .intro-child { left: 50%; width: min(210px, 50vw); opacity: 1; }
+    .brand-intro.is-reduced .intro-slogan { opacity: 1; }
+    .brand-intro.is-reduced .intro-dawn { display: none; }
+
+    html.intro-pending .site-header,
+    html.intro-pending .hero h1,
+    html.intro-pending .hero-bottom { opacity: 0; }
+    html.intro-revealing .site-header { animation: introPageIn .46s 2.9s ease-out forwards; }
+    html.intro-revealing .hero h1 { animation: introHeroIn .56s 2.95s cubic-bezier(.22, 1, .36, 1) forwards; }
+    html.intro-revealing .hero-bottom { animation: introPageIn .44s 3.05s ease-out forwards; }
+
+    @keyframes introGridIn { to { opacity: 1; } }
+    @keyframes introParentIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(.975); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes introParentShift {
+      from { left: 50%; opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      to { left: 21%; opacity: .9; transform: translate(-50%, -50%) scale(.82); }
+    }
+    @keyframes introParentFade {
+      from { opacity: .9; }
+      to { opacity: 0; }
+    }
+    @keyframes introLineGrow { to { transform: scaleX(1); } }
+    @keyframes introSignalTravel {
+      0% { left: 0; opacity: 0; }
+      8% { opacity: 1; }
+      92% { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
+    }
+    @keyframes introStepIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes introConnectionFade { to { opacity: 0; transform: translateY(-50%) scaleX(.86); } }
+    @keyframes introChildIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(.96); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes introChildCenter {
+      from { left: 78%; width: clamp(150px, 14vw, 210px); }
+      to { left: 50%; width: clamp(210px, 20vw, 300px); }
+    }
+    @keyframes introChildDock {
+      from { left: 50%; top: 50%; width: clamp(210px, 20vw, 300px); transform: translate(-50%, -50%); }
+      to { left: var(--pad); top: 21px; width: 118px; transform: translate(0, 0); }
+    }
+    @keyframes introSloganIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes introSloganOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-4px); }
+    }
+    @keyframes introDawnRise {
+      0% { opacity: 0; transform: scale(.62) rotate(-10deg); }
+      38% { opacity: .42; }
+      100% { opacity: .82; transform: scale(1) rotate(0deg); }
+    }
+    @keyframes introReveal {
+      0% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+    @keyframes introSkip { to { opacity: 0; visibility: hidden; } }
+    @keyframes introPageIn { to { opacity: 1; } }
+    @keyframes introHeroIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 12px;
+      top: -60px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--signal);
+      color: var(--black);
+    }
+    .skip-link:focus { top: 12px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      min-height: 64px;
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+      background: rgba(10, 10, 10, .88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      justify-self: start;
+      padding: 13px var(--pad);
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .brand img { width: 118px; height: auto; }
+    .main-nav {
+      display: flex;
+      align-items: stretch;
+      justify-self: center;
+      gap: 3px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .main-nav::-webkit-scrollbar { display: none; }
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: max-content;
+      min-height: 34px;
+      margin: auto 0;
+      padding: 0 13px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 11px;
+      transition: background-color .18s ease, color .18s ease;
+    }
+    .nav-link:hover,
+    .nav-link[aria-current="page"] { background: var(--surface); color: var(--ink); box-shadow: inset 0 0 0 1px rgba(255, 106, 0, .16); }
+    .contact-link {
+      display: inline-flex;
+      align-items: center;
+      justify-self: end;
+      align-self: center;
+      min-height: 36px;
+      margin-right: var(--pad);
+      padding: 0 17px;
+      border: 1px solid var(--signal);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--signal);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color .18s ease, color .18s ease;
+    }
+    .contact-link:hover,
+    .contact-link[aria-current="page"] { background: var(--signal); color: var(--black); }
+
+    main { min-height: calc(100vh - 64px); }
+    .view { display: none; }
+    .view.is-active { display: block; }
+    .page-shell { max-width: var(--max); margin: 0 auto; }
+
+    .kicker,
+    .eyebrow,
+    .meta,
+    .index-no,
+    .chip,
+    .status,
+    .section-label {
+      font-size: 11px;
+      line-height: 1.2;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .kicker { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+    .kicker::before { content: ""; width: 8px; height: 8px; background: var(--signal); border-radius: 50%; }
+    .eyebrow, .meta, .index-no, .section-label { color: var(--muted); }
+    .accent { color: var(--signal); }
+
+    .hero {
+      min-height: min(610px, calc(68vh - 64px));
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: var(--pad);
+      border-bottom: 1px solid var(--line);
+      background-image:
+        radial-gradient(circle at 88% 28%, rgba(255, 106, 0, .19), transparent 20%),
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+      background-size: auto, 64px 64px, 64px 64px;
+    }
+    .hero-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 100px;
+      align-items: end;
+      gap: 40px;
+      padding: clamp(40px, 6vh, 66px) 0 30px;
+    }
+    .hero h1 {
+      max-width: 1080px;
+      margin: 16px 0 0;
+      font-family: var(--display);
+      font-size: clamp(42px, 5.25vw, 78px);
+      font-weight: 400;
+      line-height: .95;
+      letter-spacing: -.045em;
+    }
+    .hero h1 span { display: block; }
+    .hero-mark { align-self: start; justify-self: end; width: 76px; }
+    .hero-mark img { width: 100%; }
+    .hero-bottom {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr auto;
+      gap: 22px;
+      align-items: end;
+      padding: 16px 0 2px;
+      border-top: 1px solid var(--line);
+    }
+    .hero-bottom p { margin: 0; max-width: 590px; font-size: clamp(14px, 1vw, 16px); }
+    .button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      min-width: 126px;
+      padding: 10px 12px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+      transition: background-color .18s ease, color .18s ease, transform .18s ease;
+    }
+    .button::after { content: "↗"; }
+    .button:hover { background: var(--white); color: var(--black); }
+    .button.primary { border-color: var(--signal); background: var(--signal); color: var(--black); }
+    .button.primary:hover { border-color: var(--signal-deep); background: var(--signal-deep); color: var(--black); }
+    .button:hover { transform: translateY(-1px); }
+
+    .section {
+      padding: clamp(52px, 7vw, 104px) var(--pad);
+      border-bottom: 1px solid var(--line);
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 30px;
+      margin-bottom: clamp(34px, 5vw, 64px);
+    }
+    .section-head h2,
+    .page-hero h1 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(40px, 5vw, 78px);
+      font-weight: 400;
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+    .section-head .lead { max-width: 760px; margin: 18px 0 0; font-size: clamp(17px, 1.5vw, 22px); }
+    .section-head .copy { max-width: 670px; margin: 20px 0 0; color: var(--muted); }
+
+    .page-hero {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 30px;
+      min-height: 40vh;
+      padding: clamp(60px, 8vw, 110px) var(--pad) 44px;
+      border-bottom: 1px solid var(--line);
+    }
+    .page-hero h1 { max-width: 980px; font-size: clamp(52px, 6.5vw, 100px); }
+    .page-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      padding: 24px var(--pad);
+      border-bottom: 1px solid var(--line);
+    }
+    .page-intro p { margin: 0; max-width: 680px; }
+
+    .home-brief {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 12px;
+      padding: 14px var(--pad) 30px;
+      border-bottom: 1px solid var(--line);
+    }
+    .home-brief-panel {
+      min-height: 210px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--soft-surface);
+    }
+    .home-brief h2 {
+      max-width: 620px;
+      margin: 22px 0 0;
+      font-family: var(--display);
+      font-size: clamp(30px, 3.2vw, 46px);
+      font-weight: 400;
+      line-height: 1.02;
+      letter-spacing: -.04em;
+    }
+    .home-brief p { max-width: 600px; margin: 18px 0 0; color: var(--muted); }
+    .home-principles { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; border-top: 1px solid var(--line); }
+    .home-principle { padding: 14px 14px 0 0; }
+    .home-principle + .home-principle { padding-left: 14px; border-left: 1px solid var(--line); }
+    .home-principle strong { display: block; margin-top: 8px; font-size: 15px; font-weight: 500; }
+
+    .home-directory-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px var(--pad) 20px;
+    }
+    .home-directory-head h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 400;
+      letter-spacing: -.035em;
+    }
+    .home-directory-head p { margin: 0; color: var(--muted); font-size: 13px; }
+    .home-directory {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding: 0 var(--pad) 30px;
+      border-bottom: 1px solid var(--line);
+    }
+    .home-entry {
+      min-height: 142px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 17px 18px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft-surface);
+      cursor: pointer;
+      text-align: left;
+      transition: background-color .18s ease, color .18s ease, transform .18s ease;
+    }
+    .home-entry:hover,
+    .home-entry:focus-visible { border-color: rgba(255, 106, 0, .52); background: var(--surface); color: var(--ink); outline: 0; transform: translateY(-2px); }
+    .home-entry-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .home-entry-copy { display: block; }
+    .home-entry-title { display: block; font-size: clamp(18px, 1.5vw, 23px); font-weight: 500; letter-spacing: -.025em; }
+    .home-entry-description { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+    .home-entry:hover .home-entry-description,
+    .home-entry:focus-visible .home-entry-description,
+    .home-entry:hover .index-no,
+    .home-entry:focus-visible .index-no { color: var(--muted); }
+    .home-entry-arrow { font-size: 15px; }
+
+    .home-partners,
+    .home-insights-section,
+    .home-latest {
+      padding: 30px var(--pad);
+      border-bottom: 1px solid var(--line);
+    }
+    .home-feature-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 22px;
+    }
+    .home-feature-head h2 {
+      margin: 7px 0 0;
+      font-family: var(--display);
+      font-size: clamp(28px, 3vw, 42px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -.035em;
+    }
+    .home-feature-head p { max-width: 520px; margin: 0; color: var(--muted); font-size: 13px; }
+    .home-partner-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .home-partner-item {
+      min-height: 104px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--soft-surface);
+    }
+    .home-partner-item strong { font-size: 15px; font-weight: 500; }
+    .home-partner-item span { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .home-insights {
+      min-height: 286px;
+      display: grid;
+      grid-template-columns: minmax(250px, .72fr) 2fr;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid #303034;
+      background-color: #050505;
+      background-image:
+        radial-gradient(circle at 96% 116%, rgba(255, 106, 0, .5), transparent 28%),
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+      background-size: auto, 48px 48px, 48px 48px;
+      color: var(--white);
+    }
+    .home-insights-intro { display: flex; flex-direction: column; justify-content: space-between; padding: 28px; }
+    .home-insights-intro h2 { margin: 12px 0 0; font-size: clamp(32px, 3.4vw, 52px); font-weight: 500; line-height: .95; letter-spacing: -.04em; }
+    .home-insights-intro p { margin: 0; color: #bdbdbd; font-size: 12px; }
+    .home-insights-feed { display: grid; align-content: stretch; border-left: 1px solid #3a3a3a; }
+    .home-insight-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 20px; align-items: center; padding: 22px 24px; border-bottom: 1px solid #3a3a3a; }
+    .home-insight-row:last-child { border-bottom: 0; }
+    .home-insight-row .meta { color: #8f8f8f; }
+    .home-insight-row p { margin: 0; color: #d0d0d0; }
+    .home-insight-row .home-entry-arrow { color: var(--signal); }
+    .text-link { padding: 0 0 3px; border: 0; border-bottom: 1px solid currentColor; background: transparent; cursor: pointer; font-size: 11px; }
+    .text-link:hover { color: var(--signal); }
+    .home-event-rail {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(210px, 1fr);
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      scroll-snap-type: x proximity;
+    }
+    .home-event-card { min-height: 164px; display: grid; grid-template-rows: 76px auto; border-top: 1px solid var(--line); scroll-snap-align: start; }
+    .home-event-thumb { display: grid; place-items: center; margin-top: 10px; border-radius: 9px; background: var(--surface); color: var(--muted); font-size: 10px; letter-spacing: .08em; }
+    .home-event-copy { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding-top: 11px; }
+    .home-event-copy h3 { margin: 0; font-size: 16px; font-weight: 500; }
+    .home-event-copy p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+
+    .content-index { border-bottom: 1px solid var(--line); }
+    .content-row {
+      display: grid;
+      grid-template-columns: 48px 1.2fr 1fr auto;
+      gap: 20px;
+      align-items: center;
+      min-height: 72px;
+      padding: 13px var(--pad);
+      border-top: 1px solid var(--line);
+    }
+    .content-row:first-child { border-top: 0; }
+    .content-row h3 { margin: 0; font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; letter-spacing: -.025em; }
+    .content-row p { margin: 0; color: var(--muted); font-size: 13px; }
+    .arrow { font-size: 16px; }
+
+    .grid { display: grid; gap: 12px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .card {
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--soft-surface);
+    }
+    .card h3 { margin: 0; font-size: clamp(22px, 1.8vw, 32px); font-weight: 500; line-height: 1.08; letter-spacing: -.03em; }
+    .card p { margin: 0; color: var(--muted); }
+    .card-top { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
+    .card.signal { border-color: rgba(255, 106, 0, .34); background: rgba(255, 106, 0, .09); color: var(--ink); }
+    .card.signal p, .card.signal .meta, .card.signal .eyebrow, .card.signal .index-no { color: var(--muted); }
+    .card.dark { border-color: #343438; background: #050505; color: var(--white); }
+    .card.dark p, .card.dark .meta { color: #bdbdbd; }
+    .card.wide { grid-column: span 2; }
+    .card.tall { min-height: 360px; }
+    .placeholder {
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .people-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .person { min-height: 290px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--soft-surface); display: flex; flex-direction: column; justify-content: space-between; }
+    .person-portrait { aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: 10px; background: var(--surface); color: var(--muted); font-size: 11px; letter-spacing: .08em; }
+    .person h3 { margin: 18px 0 2px; font-size: 22px; font-weight: 500; }
+    .person p { margin: 0; color: var(--muted); font-size: 13px; }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 28px; }
+    .chip { padding: 8px 12px; border: 1px solid var(--ink); border-radius: 999px; background: transparent; }
+    .chip.active { border-color: var(--signal); background: var(--signal); color: var(--black); }
+    .status { display: inline-flex; width: fit-content; padding: 7px 10px; border: 1px solid currentColor; border-radius: 999px; }
+    .status.done { background: var(--white); color: var(--black); }
+    .status.progress { background: var(--signal); color: var(--black); }
+    .status.pending { color: var(--muted); }
+
+    .ticker-block {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 40px;
+      padding: 34px;
+      border: 1px solid #343438;
+      border-radius: var(--radius);
+      background: #050505;
+      color: var(--white);
+    }
+    .ticker-block h3 { margin: 0; font-size: clamp(32px, 4vw, 60px); font-weight: 500; line-height: 1; }
+    .feed-placeholder { min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; padding: 22px; border: 1px solid #555555; border-radius: 10px; }
+    .feed-placeholder p { margin: 0; color: #bdbdbd; }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--soft-surface); padding: clamp(28px, 4vw, 60px); }
+    .form-panel h2 { margin: 0 0 40px; font-size: clamp(38px, 5vw, 72px); font-weight: 500; line-height: 1; letter-spacing: -.045em; }
+    .field { display: grid; gap: 8px; margin-top: 24px; }
+    .field label { font-size: 12px; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      padding: 13px 0;
+      border: 0;
+      border-bottom: 1px solid var(--ink);
+      border-radius: 0;
+      background: transparent;
+      color: var(--ink);
+      outline: 0;
+    }
+    .field textarea { min-height: 110px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-bottom-color: var(--signal); }
+    .submit { margin-top: 34px; border-color: var(--signal); background: var(--signal); color: var(--black); }
+
+    .site-footer {
+      display: grid;
+      grid-template-columns: 1.4fr repeat(2, 1fr);
+      gap: 50px;
+      padding: 60px var(--pad) 30px;
+      background: #050505;
+      color: var(--white);
+    }
+    .footer-logo { width: min(320px, 90%); }
+    .footer-nav { display: grid; gap: 9px; align-content: start; font-size: 13px; }
+    .footer-nav button { width: fit-content; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; }
+    .footer-nav button:hover { color: var(--signal); }
+    .footer-bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 25px; margin-top: 40px; padding-top: 18px; border-top: 1px solid #4a4a4a; color: #aaaaaa; font-size: 11px; }
+
+    @media (max-width: 1050px) {
+      .site-header { grid-template-columns: 145px minmax(0, 1fr) auto; }
+      .brand { padding: 13px 18px; }
+      .brand img { width: 110px; }
+      .nav-link { padding: 0 11px; }
+      .contact-link { padding: 0 16px; }
+      .hero { min-height: auto; }
+      .hero-main { grid-template-columns: 1fr 76px; padding-top: 46px; }
+      .hero-bottom { grid-template-columns: 1fr; }
+      .home-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .home-partner-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .home-insights { grid-template-columns: minmax(220px, .8fr) 2fr; }
+      .section-head, .page-hero { grid-template-columns: 150px 1fr; }
+      .grid.four, .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 700px) {
+      .site-header { position: static; grid-template-columns: 1fr auto; }
+      .brand { border-right: 0; }
+      .main-nav { grid-column: 1 / -1; order: 3; display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; overflow: visible; padding: 7px var(--pad) 11px; border-top: 1px solid rgba(255, 255, 255, .08); }
+      .nav-link { min-height: 38px; margin: 0; background: var(--soft-surface); }
+      .contact-link { min-height: 36px; }
+      .hero-main { grid-template-columns: 1fr; padding-top: 42px; }
+      .hero-mark { justify-self: start; width: 56px; order: -1; }
+      .hero h1 { font-size: clamp(38px, 11vw, 54px); }
+      .home-brief { grid-template-columns: 1fr; gap: 10px; padding-block: 12px 24px; }
+      .home-brief-panel { min-height: 0; padding: 22px; }
+      .home-directory-head { align-items: start; flex-direction: column; padding-block: 24px 16px; }
+      .home-directory { gap: 10px; padding-bottom: 24px; }
+      .home-entry { min-height: 126px; padding: 15px; }
+      .home-entry-title { font-size: 18px; }
+      .home-entry-description { display: none; }
+      .home-partners, .home-insights-section, .home-latest { padding-block: 24px; }
+      .home-feature-head { align-items: start; flex-direction: column; margin-bottom: 18px; }
+      .home-partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .home-partner-item { min-height: 90px; }
+      .home-insights { min-height: 0; grid-template-columns: 1fr; }
+      .home-insights-intro { min-height: 200px; padding: 24px; }
+      .home-insights-feed { border-left: 0; border-top: 1px solid #3a3a3a; }
+      .home-insight-row { grid-template-columns: 70px 1fr auto; gap: 12px; padding: 18px; }
+      .intro-skip { top: 14px; }
+      .intro-parent { top: 35%; width: min(205px, 58vw); }
+      .intro-parent-label { margin-bottom: 6px; }
+      .intro-connection { left: 24%; right: 24%; top: 54%; height: 44px; }
+      .intro-line { top: 20px; }
+      .intro-steps { display: none; }
+      .intro-dawn { right: -72vw; bottom: -78vw; width: 160vw; }
+      .intro-child { left: 50%; top: 68%; width: min(172px, 46vw); }
+      .intro-slogan { margin-top: 13px; font-size: 9px; }
+      .brand-intro.is-playing .intro-parent {
+        animation:
+          introParentIn .3s .04s cubic-bezier(.22, 1, .36, 1) forwards,
+          introParentFadeMobile .22s .63s ease forwards;
+      }
+      .brand-intro.is-playing .intro-line { animation: introLineGrow .36s .3s cubic-bezier(.65, 0, .35, 1) forwards; }
+      .brand-intro.is-playing .intro-line-signal { animation: introSignalTravel .36s .3s cubic-bezier(.65, 0, .35, 1) forwards; }
+      .brand-intro.is-playing .intro-connection { animation: introConnectionFade .2s .66s ease forwards; }
+      .brand-intro.is-playing .intro-dawn { animation: introDawnRise .58s .62s cubic-bezier(.22, 1, .36, 1) forwards; }
+      .brand-intro.is-playing .intro-child {
+        animation:
+          introMobileChildIn .28s .64s cubic-bezier(.22, 1, .36, 1) forwards,
+          introMobileChildCenter .24s .9s cubic-bezier(.65, 0, .35, 1) forwards;
+      }
+      .brand-intro.is-playing .intro-slogan { animation: introSloganIn .18s .9s ease-out forwards; }
+      .brand-intro.is-playing { animation: introReveal .3s 1.2s cubic-bezier(.65, 0, .35, 1) forwards; }
+      html.intro-revealing .site-header { animation: introPageIn .3s 1.18s ease-out forwards; }
+      html.intro-revealing .hero h1 { animation: introHeroIn .34s 1.2s cubic-bezier(.22, 1, .36, 1) forwards; }
+      html.intro-revealing .hero-bottom { animation: introPageIn .28s 1.28s ease-out forwards; }
+      .content-row { grid-template-columns: 38px 1fr auto; min-height: 66px; gap: 12px; }
+      .content-row p { display: none; }
+      .section-head, .page-hero { grid-template-columns: 1fr; gap: 18px; }
+      .page-hero { min-height: auto; }
+      .page-intro, .form-grid, .ticker-block { grid-template-columns: 1fr; }
+      .grid.two, .grid.three, .grid.four, .people-grid { grid-template-columns: 1fr; }
+      .card.wide { grid-column: span 1; }
+      .site-footer { grid-template-columns: 1fr; }
+      .footer-bottom { grid-column: 1; flex-direction: column; }
+    }
+
+    @keyframes introMobileChildIn {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(.96); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+    @keyframes introParentFadeMobile {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes introMobileChildCenter {
+      from { top: 68%; width: min(172px, 46vw); }
+      to { top: 50%; width: min(220px, 58vw); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">跳至主要内容</a>
+
+  <div class="brand-intro" id="brand-intro" aria-label="KOS 与 KOSX 品牌连接开屏">
+    <button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
+    <div class="intro-parent">
+      <span class="intro-parent-label">From the KOS ecosystem</span>
+      <div class="intro-kos-crop"><img src="assets/logo/KOS-parent.png" alt="KOS"></div>
+    </div>
+    <div class="intro-connection" aria-hidden="true">
+      <div class="intro-line"><span class="intro-line-signal"></span></div>
+      <div class="intro-steps"><span>Connect</span><span>Create</span><span>Collaborate</span></div>
+    </div>
+    <div class="intro-dawn" aria-hidden="true"></div>
+    <div class="intro-child">
+      <img src="assets/logo/KOSX logo White.png" alt="KOSX.ai">
+      <p class="intro-slogan">BUILD SOMETHING REAL.</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <button class="brand nav-trigger" data-route="home" aria-label="返回首页">
+      <img src="assets/logo/KOSX logo White.png" alt="KOSX.ai">
+    </button>
+    <nav class="main-nav" aria-label="主导航">
+      <button class="nav-link nav-trigger" data-route="home">首页</button>
+      <button class="nav-link nav-trigger" data-route="members">成员</button>
+      <button class="nav-link nav-trigger" data-route="activities">活动</button>
+      <button class="nav-link nav-trigger" data-route="partners">合作伙伴</button>
+      <button class="nav-link nav-trigger" data-route="cash-cow-club">搞钱研究所</button>
+      <button class="nav-link nav-trigger" data-route="kosx-lab">KOSX Lab</button>
+    </nav>
+    <button class="contact-link nav-trigger" data-route="contact-us">联系我们 ↗</button>
+  </header>
+
+  <main id="content" tabindex="-1">
+    <!-- HOME -->
+    <section class="view is-active" data-view="home" aria-labelledby="home-title">
+      <div class="page-shell">
+        <section class="hero">
+          <div class="hero-main">
+            <div>
+              <div class="kicker">Creator Network · Project Collective</div>
+              <h1 id="home-title"><span>将 AI 时代的创造者</span><span>组织成真正能够</span><span>把事情做成的网络<span class="accent">.</span></span></h1>
+            </div>
+            <div class="hero-mark"><img src="assets/logo/KOSX ICON White.png" alt=""></div>
+          </div>
+          <div class="hero-bottom">
+            <p>通过社群发现人才，以真实项目组织协作，让创造的成果进入真实商业场景。</p>
+            <p class="meta">CONNECT · CREATE · COLLABORATE<br>BUILD SOMETHING REAL</p>
+            <div class="button-row">
+              <button class="button primary nav-trigger" data-route="kosx-lab">探索项目</button>
+              <button class="button nav-trigger" data-route="contact-us">加入 KOSX</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="home-brief" aria-label="我们是谁与使命愿景">
+          <article class="home-brief-panel">
+            <div class="section-label">01 / 我们是谁</div>
+            <h2>不是 AI 产品公司，<br>而是创造者网络<span class="accent">.</span></h2>
+            <p>文案</p>
+          </article>
+          <article class="home-brief-panel">
+            <div class="section-label">02 / Mission &amp; Vision</div>
+            <div class="home-principles">
+              <div class="home-principle"><span class="eyebrow">Mission</span><strong>文案</strong></div>
+              <div class="home-principle"><span class="eyebrow">Vision</span><strong>文案</strong></div>
+            </div>
+            <p>文案</p>
+          </article>
+        </section>
+
+        <section aria-labelledby="home-directory-title">
+          <div class="home-directory-head">
+            <div><div class="section-label">03 / Explore KOSX</div><h2 id="home-directory-title">这里正在发生什么<span class="accent">?</span></h2></div>
+            <p>六个核心入口，详细内容进入对应页面。</p>
+          </div>
+          <div class="home-directory" aria-label="首页六个核心入口">
+            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">01</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">搞钱研究所</span><span class="home-entry-description">内容更新、周报与对外输出。</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">02</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">AI Workshop</span><span class="home-entry-description">搞钱研究所旗下活动模块。</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">03</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">灵感市集</span><span class="home-entry-description">搞钱研究所旗下内容模块。</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="kosx-lab"><span class="home-entry-top"><span class="index-no">04</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">KOSX Lab</span><span class="home-entry-description">将想法推进为真实项目。</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="members"><span class="home-entry-top"><span class="index-no">05</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">我们的成员</span><span class="home-entry-description">Core Team、Mentors 与 Builders。</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="activities"><span class="home-entry-top"><span class="index-no">06</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">最新活动</span><span class="home-entry-description">线上、线下、Something New、VersionX。</span></span></button>
+          </div>
+        </section>
+
+        <section class="home-partners" aria-labelledby="home-partners-title">
+          <div class="home-feature-head">
+            <div><div class="section-label">04 / Our Partners</div><h2 id="home-partners-title">合作伙伴<span class="accent">.</span></h2></div>
+            <button class="text-link nav-trigger" type="button" data-route="partners">查看合作伙伴 ↗</button>
+          </div>
+          <div class="home-partner-grid" aria-label="合作伙伴展示">
+            <article class="home-partner-item"><span>Vendor / Supplier</span><strong>DingTalk</strong></article>
+            <article class="home-partner-item"><span>Ecosystem</span><strong>Tencent</strong></article>
+            <article class="home-partner-item"><span>Cloud</span><strong>Tencent Cloud</strong></article>
+            <article class="home-partner-item"><span>AI Tool</span><strong>Workbuddy</strong></article>
+            <article class="home-partner-item"><span>Cloud</span><strong>AWS</strong></article>
+            <article class="home-partner-item"><span>Platform</span><strong>Lark</strong></article>
+          </div>
+        </section>
+
+        <section class="home-insights-section" aria-labelledby="home-insights-title">
+          <div class="home-insights">
+            <div class="home-insights-intro">
+              <div><div class="kicker">05 / Live signal</div><h2 id="home-insights-title">Insights<br>from X</h2></div>
+              <p>自动抓取 @KOSX.ai 的公开动态<br>接入失败时保留账号跳转入口</p>
+            </div>
+            <div class="home-insights-feed" aria-label="X 动态占位">
+              <article class="home-insight-row"><span class="meta">X Post / 01</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
+              <article class="home-insight-row"><span class="meta">X Post / 02</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
+              <article class="home-insight-row"><span class="meta">X Post / 03</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="home-latest" aria-labelledby="home-latest-title">
+          <div class="home-feature-head">
+            <div><div class="section-label">06 / Latest</div><h2 id="home-latest-title">最新活动<span class="accent">.</span></h2></div>
+            <button class="text-link nav-trigger" type="button" data-route="activities">查看全部 ↗</button>
+          </div>
+          <div class="home-event-rail" aria-label="最新活动，可横向滚动">
+            <article class="home-event-card"><div class="home-event-thumb">活动图片</div><div class="home-event-copy"><div><h3>活动标题</h3><p>线上活动 · 日期</p></div><span class="home-entry-arrow">↗</span></div></article>
+            <article class="home-event-card"><div class="home-event-thumb">活动图片</div><div class="home-event-copy"><div><h3>活动标题</h3><p>线下活动 · 日期</p></div><span class="home-entry-arrow">↗</span></div></article>
+            <article class="home-event-card"><div class="home-event-thumb">活动图片</div><div class="home-event-copy"><div><h3>活动标题</h3><p>VersionX · 日期</p></div><span class="home-entry-arrow">↗</span></div></article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- MEMBERS -->
+    <section class="view" data-view="members" aria-labelledby="members-title">
+      <div class="page-shell">
+        <header class="page-hero"><div class="section-label">02 / Members</div><h1 id="members-title">我们的<br>成员<span class="accent">.</span></h1></header>
+        <div class="page-intro"><p>会员机制</p><p>文案</p></div>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Core Team</div><div><h2>核心团队</h2><p class="lead">文案</p></div></div>
+          <div class="people-grid">
+            <article class="person"><div class="person-portrait">人物照片</div><div><h3>Vegas Liu</h3><p>主理人 + IP</p></div></article>
+            <article class="person"><div class="person-portrait">人物照片</div><div><h3>Eugenia Su</h3><p>Intelligence Lead</p></div></article>
+            <article class="person"><div class="person-portrait">人物照片</div><div><h3>Mike Lam</h3><p>AI Operation Lead</p></div></article>
+            <article class="person"><div class="person-portrait">人物照片</div><div><h3>成员姓名</h3><p>角色</p></div></article>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Member Groups</div><div><h2>成员分类</h2><p class="lead">点击分类后可进入对应成员列表。</p></div></div>
+          <div class="grid three">
+            <article class="card"><span class="index-no">01</span><h3>Internship</h3><p>可可鸭 · 子豪 · 安寻 · 梁爽</p></article>
+            <article class="card"><span class="index-no">02</span><h3>Mentors</h3><p>Edison · Jasper Wei</p></article>
+            <article class="card signal"><span class="index-no">03</span><h3>Builder<br>共建者</h3><p>Technical Support · 独立开发者 · AI PM · Design / UIUX</p></article>
+            <article class="card"><span class="index-no">04</span><h3>Partners</h3><p>生态伙伴</p></article>
+            <article class="card"><span class="index-no">05</span><h3>Capitals</h3><p>待定</p></article>
+            <article class="card dark"><span class="index-no">06</span><h3>Membership</h3><p>成员认证 · 共建者等级 · 文案</p></article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- ACTIVITIES -->
+    <section class="view" data-view="activities" aria-labelledby="activities-title">
+      <div class="page-shell">
+        <header class="page-hero"><div class="section-label">03 / Activities</div><h1 id="activities-title">活动与<br>现场<span class="accent">.</span></h1></header>
+        <div class="page-intro"><p>线上与线下发生的连接、讨论和共建。</p><p>文案</p></div>
+        <section class="section">
+          <div class="tabs" aria-label="活动分类"><span class="chip active">全部</span><span class="chip">线上活动</span><span class="chip">线下活动</span><span class="chip">Something New</span><span class="chip">VersionX</span></div>
+          <div class="grid three">
+            <article class="card tall signal"><div class="card-top"><span class="chip">VersionX</span><span class="meta">日期</span></div><div class="placeholder">活动封面 / 照片</div><div><h3>活动标题</h3><p>时间 · 地点 · 状态</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="chip">线下活动</span><span class="meta">日期</span></div><div class="placeholder">活动封面 / 照片</div><div><h3>活动标题</h3><p>时间 · 地点 · 状态</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="chip">线上活动</span><span class="meta">日期</span></div><div class="placeholder">活动封面 / 照片</div><div><h3>活动标题</h3><p>时间 · 平台 · 状态</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="chip">Something New</span><span class="meta">日期</span></div><div class="placeholder">活动封面 / 照片</div><div><h3>活动标题</h3><p>文案</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="chip">活动回顾</span><span class="meta">日期</span></div><div class="placeholder">现场照片</div><div><h3>活动标题</h3><p>文案</p></div></article>
+            <article class="card tall dark"><div class="card-top"><span class="chip">Next</span><span class="meta">Coming soon</span></div><div class="placeholder">活动封面</div><div><h3>下一个活动</h3><p>文案</p></div></article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- PARTNERS -->
+    <section class="view" data-view="partners" aria-labelledby="partners-title">
+      <div class="page-shell">
+        <header class="page-hero"><div class="section-label">04 / Partners</div><h1 id="partners-title">合作<br>伙伴<span class="accent">.</span></h1></header>
+        <div class="page-intro"><p>Vendors / Suppliers / Ecosystem Partners</p><p>文案</p></div>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Partner Network</div><div><h2>共同提供<br>真实资源</h2><p class="lead">文案</p></div></div>
+          <div class="grid four">
+            <article class="card"><span class="meta">Vendor / Supplier</span><h3>DingTalk</h3><p>合作内容 · 文案</p></article>
+            <article class="card"><span class="meta">Platform</span><h3>Tencent<br>Cloud</h3><p>合作内容 · 文案</p></article>
+            <article class="card"><span class="meta">AI Platform</span><h3>WorkBuddy</h3><p>合作内容 · 文案</p></article>
+            <article class="card signal"><span class="meta">Infrastructure</span><h3>AWS</h3><p>合作内容 · 文案</p></article>
+            <article class="card"><span class="meta">Collaboration</span><h3>Lark</h3><p>合作内容 · 文案</p></article>
+            <article class="card"><span class="meta">Partner</span><h3>KOS<br>Solutions</h3><p>合作内容 · 文案</p></article>
+            <article class="card"><span class="meta">Community</span><h3>OPC<br>杭州</h3><p>合作内容 · 文案</p></article>
+            <article class="card dark"><span class="meta">Join the network</span><h3>成为合作<br>伙伴</h3><p>文案</p></article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- CASH COW CLUB -->
+    <section class="view" data-view="cash-cow-club" aria-labelledby="club-title">
+      <div class="page-shell">
+        <header class="page-hero"><div class="section-label">05 / Cash Cow Club</div><h1 id="club-title">搞钱<br>研究所<span class="accent">.</span></h1></header>
+        <div class="page-intro"><p>社群根据地、内容产生和对外输出渠道。</p><p>文案</p></div>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Content</div><div><h2>内容与<br>信号</h2><p class="lead">文案</p></div></div>
+          <div class="grid three">
+            <article class="card tall signal"><span class="eyebrow">Weekly</span><div class="placeholder">内容封面</div><div><h3>搞钱研究所周报</h3><p>文案</p></div></article>
+            <article class="card tall"><span class="eyebrow">Case Study</span><div class="placeholder">案例封面</div><div><h3>KOSX Lab 项目案例</h3><p>文案</p></div></article>
+            <article class="card tall dark"><span class="eyebrow">Video</span><div class="placeholder">视频封面</div><div><h3>视频更新</h3><p>抖音 · Bilibili · 微信视频号</p></div></article>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Topics</div><div><h2>内容分类</h2><p class="lead">从工具评测到企业 AI 工作流。</p></div></div>
+          <div class="content-index">
+            <div class="content-row"><span class="index-no">01</span><h3>AI 工具测评</h3><p>数据库 · 生产力 · 平台 · Agent · AI 硬件</p><span class="arrow">↗</span></div>
+            <div class="content-row"><span class="index-no">02</span><h3>AI 讨论和分享</h3><p>播客 · 对话 · 社群观点</p><span class="arrow">↗</span></div>
+            <div class="content-row"><span class="index-no">03</span><h3>企业 AI 工作流</h3><p>案例 · 方法 · 实践</p><span class="arrow">↗</span></div>
+            <div class="content-row"><span class="index-no">04</span><h3>AI Workshop</h3><p>活动 · 教程 · 共同实践</p><span class="arrow">↗</span></div>
+            <div class="content-row"><span class="index-no">05</span><h3>灵感市集</h3><p>想法 · 项目 · 人才 · 商业信号</p><span class="arrow">↗</span></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- KOSX LAB -->
+    <section class="view" data-view="kosx-lab" aria-labelledby="lab-title">
+      <div class="page-shell">
+        <header class="page-hero"><div class="section-label">06 / KOSX Lab</div><h1 id="lab-title">KOSX<br>Lab<span class="accent">.</span></h1></header>
+        <div class="page-intro"><p>小型研发中心，将内外部的想法实现落地。</p><p>文案</p></div>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Project Roles</div><div><h2>谁在把事情<br>做出来</h2><p class="lead">OPC / 独立开发者 / AI PM / FDE / Design</p></div></div>
+          <div class="grid four">
+            <article class="card"><span class="index-no">01</span><h3>Project<br>Owner</h3><p>文案</p></article>
+            <article class="card"><span class="index-no">02</span><h3>Independent<br>Builder</h3><p>文案</p></article>
+            <article class="card"><span class="index-no">03</span><h3>AI PM<br>/ FDE</h3><p>文案</p></article>
+            <article class="card signal"><span class="index-no">04</span><h3>Design<br>/ UIUX</h3><p>文案</p></article>
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><div class="section-label">Projects</div><div><h2>项目库</h2><p class="lead">项目状态沿用原网站口径：已完成、进行中、待确认。</p></div></div>
+          <div class="tabs"><span class="chip active">全部</span><span class="chip">已完成</span><span class="chip">进行中</span><span class="chip">待确认</span></div>
+          <div class="grid three">
+            <article class="card tall dark"><div class="card-top"><span class="status done">已完成</span><span class="meta">Project 01</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>微信群 AI 助手</h3><p>参与人 · 成果 · 项目链接</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="status done">已完成</span><span class="meta">Project 02</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>词环</h3><p>发起人 · 参与人 · 成果</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="status done">已完成</span><span class="meta">Project 03</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>AI 项目管理</h3><p>发起人 · 参与人 · GitHub</p></div></article>
+            <article class="card tall signal"><div class="card-top"><span class="status progress">进行中</span><span class="meta">Project 04</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>10 美元 AI 小硬件</h3><p>发起人 · 参与人 · 当前阶段</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="status progress">进行中</span><span class="meta">Project 05</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>Zaelume 电商 SaaS</h3><p>问题 · MVP · 项目链接</p></div></article>
+            <article class="card tall"><div class="card-top"><span class="status pending">待确认</span><span class="meta">Project 06</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>项目标题</h3><p>想法 · 发起人 · 所需角色</p></div></article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="view" data-view="contact-us" aria-labelledby="contact-title">
+      <div class="page-shell">
+        <header class="page-hero"><div class="section-label">07 / Contact</div><h1 id="contact-title">一起把事情<br>做出来<span class="accent">.</span></h1></header>
+        <div class="page-intro"><p>加入我们 / 发起企业合作</p><p>文案</p></div>
+        <section class="section">
+          <div class="form-grid">
+            <form class="form-panel" onsubmit="return false;">
+              <span class="eyebrow">For Builders</span>
+              <h2>加入 KOSX</h2>
+              <div class="field"><label for="join-name">姓名 / 称呼</label><input id="join-name" placeholder="文案"></div>
+              <div class="field"><label for="join-role">希望参与的角色</label><select id="join-role"><option>请选择</option><option>独立开发者</option><option>AI PM / FDE</option><option>Design / UIUX</option><option>Mentor</option><option>其他</option></select></div>
+              <div class="field"><label for="join-work">作品或能力说明</label><textarea id="join-work" placeholder="文案"></textarea></div>
+              <button class="button submit" type="submit">提交申请</button>
+            </form>
+            <form class="form-panel" onsubmit="return false;">
+              <span class="eyebrow">For Enterprises</span>
+              <h2>发起企业合作</h2>
+              <div class="field"><label for="biz-name">姓名 / 机构</label><input id="biz-name" placeholder="文案"></div>
+              <div class="field"><label for="biz-type">合作类型</label><select id="biz-type"><option>请选择</option><option>AI 项目与交付</option><option>人才与招聘</option><option>平台与工具合作</option><option>活动与生态合作</option><option>其他</option></select></div>
+              <div class="field"><label for="biz-brief">需求说明</label><textarea id="biz-brief" placeholder="文案"></textarea></div>
+              <button class="button submit" type="submit">提交需求</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div><img class="footer-logo" src="assets/logo/KOSX logo White.png" alt="KOSX.ai"><p>Connect. Create. Collaborate.<br>Build something real.</p></div>
+    <div class="footer-nav" aria-label="页脚导航">
+      <span class="eyebrow">Explore</span>
+      <button class="nav-trigger" data-route="members">成员</button>
+      <button class="nav-trigger" data-route="activities">活动</button>
+      <button class="nav-trigger" data-route="partners">合作伙伴</button>
+      <button class="nav-trigger" data-route="kosx-lab">KOSX Lab</button>
+    </div>
+    <div class="footer-nav">
+      <span class="eyebrow">Elsewhere</span>
+      <span>X / Twitter</span><span>抖音</span><span>Bilibili</span><span>微信视频号</span>
+    </div>
+    <div class="footer-bottom"><span>© 2026 KOSX.ai · HTML Framework V0.1</span><span>Privacy · Terms · ICP</span></div>
+  </footer>
+
+  <script>
+    const introRoot = document.documentElement;
+    const brandIntro = document.getElementById("brand-intro");
+    const introSkip = document.getElementById("intro-skip");
+    const introShouldPlay = introRoot.classList.contains("intro-pending");
+    let introFinished = false;
+    let introStarted = false;
+    let introTimer;
+
+    function finishIntro(skipped = false) {
+      if (introFinished) return;
+      introFinished = true;
+      window.clearTimeout(introTimer);
+      document.removeEventListener("keydown", handleIntroKey);
+
+      if (skipped) {
+        brandIntro.classList.remove("is-playing", "is-reduced");
+        brandIntro.classList.add("is-skipping");
+        introRoot.classList.remove("intro-revealing");
+        window.setTimeout(() => {
+          introRoot.classList.remove("intro-pending");
+          brandIntro.setAttribute("aria-hidden", "true");
+          document.getElementById("content").focus({ preventScroll: true });
+        }, 170);
+        return;
+      }
+
+      introRoot.classList.remove("intro-pending", "intro-revealing");
+      introRoot.classList.add("intro-complete");
+      brandIntro.setAttribute("aria-hidden", "true");
+    }
+
+    function handleIntroKey(event) {
+      if (["Escape", "Enter", " "].includes(event.key)) {
+        event.preventDefault();
+        finishIntro(true);
+      }
+    }
+
+    function startIntro() {
+      if (!introShouldPlay || introStarted || introFinished) return;
+      introStarted = true;
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const mobileIntro = window.matchMedia("(max-width: 700px)").matches;
+      introRoot.classList.add("intro-revealing");
+      brandIntro.classList.add(reducedMotion ? "is-reduced" : "is-playing");
+      introTimer = window.setTimeout(
+        () => finishIntro(false),
+        reducedMotion ? 290 : (mobileIntro ? 1530 : 3580)
+      );
+    }
+
+    if (introShouldPlay) {
+      document.addEventListener("keydown", handleIntroKey);
+      introSkip.addEventListener("click", () => finishIntro(true), { once: true });
+      const introImages = Array.from(brandIntro.querySelectorAll("img"));
+      const decoded = Promise.allSettled(introImages.map((image) => image.decode ? image.decode() : Promise.resolve()));
+      let introFallback;
+      Promise.race([
+        decoded,
+        new Promise((resolve) => { introFallback = window.setTimeout(resolve, 450); })
+      ]).then(() => {
+        window.clearTimeout(introFallback);
+        startIntro();
+      });
+    } else {
+      brandIntro.setAttribute("aria-hidden", "true");
+    }
+
+    const routes = ["home", "members", "activities", "partners", "cash-cow-club", "kosx-lab", "contact-us"];
+
+    function currentRoute() {
+      const value = window.location.hash.replace(/^#\/?/, "");
+      return routes.includes(value) ? value : "home";
+    }
+
+    function showRoute(route, updateHash = true) {
+      document.querySelectorAll("[data-view]").forEach((view) => {
+        const active = view.dataset.view === route;
+        view.classList.toggle("is-active", active);
+        view.setAttribute("aria-hidden", String(!active));
+      });
+
+      document.querySelectorAll("[data-route]").forEach((link) => {
+        if (link.dataset.route === route) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+
+      if (updateHash) history.pushState(null, "", `#/${route}`);
+      window.scrollTo(0, 0);
+    }
+
+    document.querySelectorAll(".nav-trigger").forEach((trigger) => {
+      trigger.addEventListener("click", () => showRoute(trigger.dataset.route));
+    });
+
+    window.addEventListener("hashchange", () => showRoute(currentRoute(), false));
+    showRoute(currentRoute(), false);
+  </script>
+</body>
+</html>

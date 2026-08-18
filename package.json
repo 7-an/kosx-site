@@ -1,0 +1,19 @@
+{
+  "name": "kosx-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 8765 --bind 127.0.0.1",
+    "check": "node scripts/check.mjs",
+    "collab:status": "node scripts/collab.mjs status",
+    "collab:doctor": "node scripts/collab.mjs doctor",
+    "collab:claim": "node scripts/collab.mjs claim",
+    "collab:heartbeat": "node scripts/collab.mjs heartbeat",
+    "collab:done": "node scripts/collab.mjs done",
+    "collab:release": "node scripts/collab.mjs release"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  }
+}
