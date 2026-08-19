@@ -33,3 +33,51 @@
 - 范围内变化：`README.md`
 - 检查：线上 200；Logo 资源 200；Edge 截图与本地逐字节一致
 - 开工基线：4864261e237b9694b1d1cc7384e8ed6cb7ce6b6e
+
+## 2026-08-19T08:25:29.437Z · kimi-k3 · 开屏 V3：voidtype 粒子聚合成 BUILD SOMETHING REAL + Logo 居上收位页首，无 3C、无曙光光影；vendored Three.js ESM 动态加载，IIFE 全局回退，WebGL 失败/reduced-motion 均有静态降级；新增单文件导出脚本
+
+- 任务：开屏 V3：voidtype 粒子聚合成 BUILD SOMETHING REAL + Logo 收位
+- 认领范围：`index.html`、`assets`、`scripts/check.mjs`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`AGENTS.md`、`README.md`、`THIRD_PARTY_NOTICES.md`
+- 范围内变化：`README.md`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`THIRD_PARTY_NOTICES.md`、`assets/vendor/`
+- 检查：npm run check 通过；puppeteer 实测 1280x800 与 390x844 开屏全程（聚合/停留/收位/落定）；http 动态 import 与 file:// IIFE 两条加载路径均验证；修复动态 import 缺 ./ 前缀与导出脚本 $& 替换陷阱两个 bug
+- 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0
+
+## 2026-08-19T08:35:06.424Z · kimi-k3 · 开屏 V3 定稿：Logo 先单独居中停一拍，再上移让位、粒子飘入聚合 SLOGAN；移除曙光；重新导出单文件版（Desktop 2026-08-19）
+
+- 任务：开屏两拍结构：Logo 居中独奏后粒子飘入
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 桌面 4 帧 + 手机 3 帧逐帧核对（独奏/飘入/聚合/收位/落定）
+- 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0
+
+## 2026-08-19T08:43:20.491Z · kimi-k3 · Logo 居中独奏约 1 秒后直接从中央飞向左上角页首位，粒子聚合期间画面不再有 Logo；更新文档并重新导出单文件版
+
+- 任务：开屏：Logo 独奏后直接飞入页首，粒子幕不再出现 Logo
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 桌面 4 帧 + 手机 3 帧逐帧核对
+- 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0
+
+## 2026-08-19T08:51:07.883Z · kimi-k3 · 开屏粒子文案改三行下行阶梯错位（BUILD 居左 / SOMETHING 居中 / REAL. 居右，步进 1.2 倍字号），采样与自适应缩放同步支持错位；粒子模块源码收进 assets/vendor/intro-particles.src.mjs
+
+- 任务：开屏粒子文案改三行错位阶梯排版
+- 认领范围：`index.html`、`assets/vendor`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`README.md`
+- 范围内变化：`README.md`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`assets/vendor/`
+- 检查：npm run check 通过；esbuild 重打包；puppeteer 桌面+手机聚合完成帧核对；单文件版重新导出
+- 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0
+
+## 2026-08-19T09:15:00.156Z · kimi-k3 · 开屏改驻留式：粒子定型后静止不再自动前进，去 Skip 按钮，底部双箭头脉动指引，滚动/上滑/键盘进入首页；粒子模块停掉环境漂移
+
+- 任务：开屏改驻留式：定型后停住、去 Skip、加下滑标签、滚动进首页
+- 认领范围：`index.html`、`assets/vendor`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`assets/vendor/`
+- 检查：npm run check 通过；puppeteer 桌面驻留 8 秒不前进 + 滚轮进入、手机上滑进入、reduced-motion 驻留与进入均验证；双箭头区域截图核对
+- 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0
+
+## 2026-08-19T09:20:01.548Z · kimi-k3 · 开屏改纯黑：移除网格纹理与橙色中心光，底色 #000
+
+- 任务：开屏改纯黑：去网格与中心光
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 独奏帧与驻留帧截图核对（纯黑 + 白粒子 + 双箭头）
+- 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0

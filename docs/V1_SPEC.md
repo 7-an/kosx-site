@@ -37,11 +37,12 @@ KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前
 
 ## 开屏动画合同
 
-- 序列：全宽引导线生长、信号点行进（Connect / Create / Collaborate 逐个点亮）→ 竖向橙金扫描边与 `clip-path` 擦除同步，从左到右「扫出」KOSX Logo → SLOGAN 淡入 → 右下角橙金曙光升起 → Logo 收进页首左上，黑场淡出、首页渐入。
-- 不出现 KOS 母品牌（2026-08-18 主理人决定）。
-- 光效：橙金色，右下角克制弧光；由 CSS 生成，不用参考图素材。
-- 降级：`prefers-reduced-motion` 直接显示 Logo + SLOGAN 后跳过；手机端缩短时长、不收入页首。
-- 只在进入首页时播放，视图内路由切换不重播；提供 Skip 按钮与键盘跳过。
+- 序列：纯黑场（#000，无网格无光晕）→ KOSX Logo 单独在正中央淡入、停留约 1 秒 → Logo 直接飞向左上角成为页首 Logo → 数万颗粒子从右侧飘入聚合成「BUILD SOMETHING REAL.」（三行下行阶梯错位：BUILD 居左、SOMETHING 居中、REAL. 居右；粒子画面中不再有 Logo）→ **驻留**：粒子定型后完全静止（仅指针扰动回弹），底部双箭头持续脉动 → 用户下滑/上滑/键盘（Enter·Space·↓）→ 粒子淡出、黑场淡出、首页渐入。
+- 进入方式：无自动前进、无 Skip 按钮；滚轮下滑、触摸上滑、点击双箭头、键盘均可进入。
+- 画面元素只有纯黑底 + 粒子 + Logo：无网格、无光晕、无曙光（2026-08-19 用户决定），无 Connect/Create/Collaborate（首页底部与页脚已有，不进开屏）。
+- 粒子：VOIDTYPE 移植模块（Three.js vendored，见 `THIRD_PARTY_NOTICES.md`），白色颗粒、纯黑底。
+- 降级：WebGL 不可用或模块加载失败 → 静态 Logo + SLOGAN 短停；`prefers-reduced-motion` 直接静态版。
+- 只在进入首页时播放，视图内路由切换不重播；无 Skip 按钮，双箭头、下滑手势与键盘进入。
 
 ## 响应式与可访问性
 

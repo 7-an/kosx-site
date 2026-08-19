@@ -47,6 +47,18 @@
 - 来源：用户要求把 Codex 可视化目录中的预览版完整扒出，按刘哥（vegas-liu-site）/西西老师（all-in-ai）模式建立 Codex ↔ Kimi 双向同步。
 - 影响：真源迁至 `/Users/ansyn/Documents/Codex/kosx-site`，原可视化目录冻结为历史快照；协作按 `SYNC_START_HERE.md` 执行。
 
+## 2026-08-19 · 开屏改驻留式：滚动进入首页
+
+- 来源：用户确认粒子版方向后要求——粒子定型后不再自动前进；去掉右上角 Skip 按钮；参照 newmix 在底部放滚动指引（双箭头 ⌄⌄ 依次脉动，无文字）；用户下滑/上滑/键盘 Enter·Space·↓ 时才淡出进入首页。
+- 同步调整：粒子定型后停掉环境漂移（画面完全静止，仅保留指针扰动回弹）；`prefers-reduced-motion` 与 WebGL 降级路径同样驻留等待滚动。
+
+## 2026-08-19 · 开屏 V3：粒子聚合 SLOGAN，移除光影
+
+- 来源：用户要求参考 newmixcoffee.com 首页，直接复用其已开源复刻的 VOIDTYPE（github.com/7-an/voidtype）粒子实现；主理人要求开屏带 KOSX Logo、3 个 C 待定。替代 2026-08-18「开屏改版」的引导线/扫描方案。
+- 组合（按用户 2026-08-19 追加反馈定稿）：学 newmix 的两拍结构——KOSX Logo 先单独出现在正中央（约 1 秒独奏时刻），随后直接飞向左上角成为页首 Logo；粒子画面里不再出现 Logo，粒子从右侧飘入聚合成「BUILD SOMETHING REAL.」；三行下行阶梯错位（BUILD 居左、SOMETHING 居中、REAL. 居右，步进 1.2 倍字号，用户 2026-08-19 要求打破单行呆板）；3 个 C 不进开屏——首页底部与页脚已有，开屏只讲一件事；不要曙光光影，纯黑画面（#000，无网格无光晕，2026-08-19 用户定：纯黑更高级）+ 粒子 + Logo。
+- 工程：粒子模块打包 Three.js 0.185.1 为单个 ESM（`assets/vendor/intro-particles.js`），动态 `import()` 加载；WebGL 不可用/加载失败 → 静态 Logo + SLOGAN；`prefers-reduced-motion` 直接静态版。许可信息见 `THIRD_PARTY_NOTICES.md`。
+- 例外批准：本站「不引入第三方库」规则对这一个 vendored 粒子模块豁免（用户明确要求）。
+
 ## 2026-08-18 · 去 AI 味：衬线大标题 + 删自我解释文案
 
 - 来源：用户要求参考 Ansyn 个人站最近一轮「去 AI 味」改造（Paco / Julian / Rauno 调研结论），把能用上的手法应用到本站。

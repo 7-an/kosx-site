@@ -42,7 +42,7 @@
 ## 工程规则
 
 - 单文件静态站：`index.html` + `assets/`，无构建、无框架、无依赖安装。
-- 不增加后端、数据库、登录、CMS、分析追踪、第三方 JS 库，除非用户另行明确批准。
+- 不增加后端、数据库、登录、CMS、分析追踪、第三方 JS 库，除非用户另行明确批准。唯一豁免：开屏粒子模块 `assets/vendor/intro-particles.js`（vendored Three.js + VOIDTYPE 移植，2026-08-19 用户批准，许可见 `THIRD_PARTY_NOTICES.md`），经动态 `import()` 加载，失败必须可降级为静态开屏。
 - 路由为 hash 视图切换，新增页面必须同时注册 `data-view`、`data-route` 和 `routes` 数组。
 - 图片只用 `assets/` 内本地文件；新增素材先确认版权来源。
 - 每次修改后运行 `npm run check`，并用 `collab:done` 写回交接。

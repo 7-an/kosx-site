@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0 · 2026-08-19
+
+- 开屏 V3：纯黑底 + voidtype 粒子聚合成「BUILD SOMETHING REAL.」（三行下行阶梯错位）；KOSX Logo 居中独奏后飞入页首；粒子定型后驻留静止，底部双箭头脉动指引，滚动/上滑/键盘进入首页；无 Skip 按钮、无网格、无光晕曙光、无 3C。
+- 工程：vendored Three.js + VOIDTYPE 移植模块（`assets/vendor/`，许可见 `THIRD_PARTY_NOTICES.md`），动态 import + IIFE 全局双路径；新增 `scripts/export-single-file.mjs` 单文件导出。
+
 ## 0.2.0 · 2026-08-19
 
 - 开屏改版：移除 KOS 母品牌，改为引导线 + 扫描线「扫出」KOSX Logo（clip-path 擦除与扫描边同步）。
