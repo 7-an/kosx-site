@@ -25,3 +25,11 @@
 - 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
 - 检查：npm run check 通过；Edge 截图 1280x800 首页+成员页 + 390x844 首页；puppeteer 实测 390 视口 scrollWidth=390 无溢出
 - 开工基线：def16a6dd57306c2dcaaa1dbdddefdbf59b108a0
+
+## 2026-08-19T07:10:39.286Z · kimi-k3 · 上线 GitHub Pages 在线预览（7-an/kosx-site），README/CHANGELOG 记录部署方式
+
+- 任务：记录 GitHub Pages 部署信息
+- 认领范围：`README.md`、`CHANGELOG.md`
+- 范围内变化：`README.md`
+- 检查：线上 200；Logo 资源 200；Edge 截图与本地逐字节一致
+- 开工基线：4864261e237b9694b1d1cc7384e8ed6cb7ce6b6e

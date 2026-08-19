@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0 · 2026-08-19
+
+- 开屏改版：移除 KOS 母品牌，改为引导线 + 扫描线「扫出」KOSX Logo（clip-path 擦除与扫描边同步）。
+- 去 AI 味：大标题改衬线混排（Latin 窄黑 + 中文宋体），删除自我解释/实现细节文案，页脚去开发水印。
+- 上线 GitHub Pages 在线预览：https://7-an.github.io/kosx-site/
+
 ## 0.1.0 · 2026-08-18
 
 - 从 Codex 可视化目录迁入 V1 原型：单文件 `index.html`（7 个 hash 视图）+ `assets/logo/` 品牌素材。

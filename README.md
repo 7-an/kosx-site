@@ -31,6 +31,12 @@ npm run check
 
 校验内联脚本语法、`assets/` 引用存在、`data-route` 与 `data-view` 一一对应、基础 SEO 标签。
 
+## 在线预览（GitHub Pages）
+
+- 地址：https://7-an.github.io/kosx-site/
+- 仓库：https://github.com/7-an/kosx-site（public，main 分支根目录即站点）
+- 发布方式：推送到 `main` 后 GitHub Pages 自动重建，约 1 分钟生效。
+
 ## 上线前清单（V1 后）
 
 - [ ] 各页面正式文案替换占位
