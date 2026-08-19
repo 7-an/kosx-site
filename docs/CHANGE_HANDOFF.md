@@ -81,3 +81,11 @@
 - 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
 - 检查：npm run check 通过；puppeteer 独奏帧与驻留帧截图核对（纯黑 + 白粒子 + 双箭头）
 - 开工基线：c45ef3961e80041cce42e755e601c8ff503115f0
+
+## 2026-08-19T09:38:06.317Z · kimi-k3 · 大标题字体回退标准黑体栈（PingFang/雅黑/Noto Sans CJK），字重升 500；替代衬线混排方案
+
+- 任务：大标题字体回退到标准黑体系栈
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 首页+成员页截图核对；单文件版重新导出
+- 开工基线：94690f178ee8df8b0bee0421ef07f6a3bd116fc9

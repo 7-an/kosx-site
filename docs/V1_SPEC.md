@@ -29,7 +29,7 @@ KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前
 ## 视觉合同
 
 - 主题：深色 VI（近黑底 `--paper`、浅色文字 `--ink`、橙金 `--signal`），`color-scheme: dark`。
-- 字体：大标题（hero、page-hero、section-head h2、首页各 feature 标题）用 `--display-serif`——Latin 保持 Arial Narrow，中文用 Songti SC/STSong 衬线（系统字体，不引入字体文件）；标签、导航、正文、卡片保持黑体系。衬线字距 -.02~-.03em，不收紧。
+- 字体：全站统一标准黑体系栈（`Helvetica Neue / PingFang SC / Microsoft YaHei / Noto Sans CJK SC / Arial`，系统字体，不引入字体文件）；大标题字重 500、字距 -.02~-.03em。不用衬线/窄体混排（跨平台渲染不可控，2026-08-19 老师反馈后回退）。
 - Logo：深色底一律使用 White 版本（`KOSX logo White.png` / `KOSX ICON White.png`）；Black 版本仅备浅色物料使用。
 - 气质：大厂式紧凑——首屏克制、密度适中；边界柔和（细分割线、适中圆角），不生硬。
 - 文案原则：不写自我解释（「详细内容进入对应页面」式）、不写实现细节（「接入失败时保留入口」式）、不留开发水印；正式文案缺失时用「文案」占位，不虚构。

@@ -47,6 +47,11 @@
 - 来源：用户要求把 Codex 可视化目录中的预览版完整扒出，按刘哥（vegas-liu-site）/西西老师（all-in-ai）模式建立 Codex ↔ Kimi 双向同步。
 - 影响：真源迁至 `/Users/ansyn/Documents/Codex/kosx-site`，原可视化目录冻结为历史快照；协作按 `SYNC_START_HERE.md` 执行。
 
+## 2026-08-19 · 大标题回退标准黑体栈
+
+- 来源：老师反馈字体感觉不好；衬线混排（Songti SC）在 Windows 会退化为中易宋体、Arial Narrow 在无 Office 机器上缺失，跨平台效果不可控。
+- 落地：所有大标题统一为标准黑体系栈 `Helvetica Neue / PingFang SC / Microsoft YaHei / Noto Sans CJK SC / Arial`，字重 400 → 500；字距行高不变。**替代 2026-08-18「去 AI 味」决定中的衬线混排方案**（其余去标签、删自我解释文案继续有效）。
+
 ## 2026-08-19 · 开屏改驻留式：滚动进入首页
 
 - 来源：用户确认粒子版方向后要求——粒子定型后不再自动前进；去掉右上角 Skip 按钮；参照 newmix 在底部放滚动指引（双箭头 ⌄⌄ 依次脉动，无文字）；用户下滑/上滑/键盘 Enter·Space·↓ 时才淡出进入首页。
