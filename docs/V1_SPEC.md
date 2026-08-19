@@ -29,16 +29,19 @@ KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前
 ## 视觉合同
 
 - 主题：深色 VI（近黑底 `--paper`、浅色文字 `--ink`、橙金 `--signal`），`color-scheme: dark`。
+- 字体：大标题（hero、page-hero、section-head h2、首页各 feature 标题）用 `--display-serif`——Latin 保持 Arial Narrow，中文用 Songti SC/STSong 衬线（系统字体，不引入字体文件）；标签、导航、正文、卡片保持黑体系。衬线字距 -.02~-.03em，不收紧。
 - Logo：深色底一律使用 White 版本（`KOSX logo White.png` / `KOSX ICON White.png`）；Black 版本仅备浅色物料使用。
 - 气质：大厂式紧凑——首屏克制、密度适中；边界柔和（细分割线、适中圆角），不生硬。
+- 文案原则：不写自我解释（「详细内容进入对应页面」式）、不写实现细节（「接入失败时保留入口」式）、不留开发水印；正式文案缺失时用「文案」占位，不虚构。
 - 不使用大面积渐变堆砌、不模仿模板化 SaaS；动效克制。
 
 ## 开屏动画合同
 
-- 序列：KOS parent logo 浮现 → 与 KOSX logo 建立连接（对角线柔和淡出）→ KOSX logo 居中停留 → 黑场淡出、首页渐入。
+- 序列：全宽引导线生长、信号点行进（Connect / Create / Collaborate 逐个点亮）→ 竖向橙金扫描边与 `clip-path` 擦除同步，从左到右「扫出」KOSX Logo → SLOGAN 淡入 → 右下角橙金曙光升起 → Logo 收进页首左上，黑场淡出、首页渐入。
+- 不出现 KOS 母品牌（2026-08-18 主理人决定）。
 - 光效：橙金色，右下角克制弧光；由 CSS 生成，不用参考图素材。
-- 降级：`prefers-reduced-motion` 直接跳过；手机端缩短时长。
-- 只在进入首页时播放，视图内路由切换不重播。
+- 降级：`prefers-reduced-motion` 直接显示 Logo + SLOGAN 后跳过；手机端缩短时长、不收入页首。
+- 只在进入首页时播放，视图内路由切换不重播；提供 Skip 按钮与键盘跳过。
 
 ## 响应式与可访问性
 

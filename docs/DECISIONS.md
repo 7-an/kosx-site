@@ -46,3 +46,19 @@
 
 - 来源：用户要求把 Codex 可视化目录中的预览版完整扒出，按刘哥（vegas-liu-site）/西西老师（all-in-ai）模式建立 Codex ↔ Kimi 双向同步。
 - 影响：真源迁至 `/Users/ansyn/Documents/Codex/kosx-site`，原可视化目录冻结为历史快照；协作按 `SYNC_START_HERE.md` 执行。
+
+## 2026-08-18 · 去 AI 味：衬线大标题 + 删自我解释文案
+
+- 来源：用户要求参考 Ansyn 个人站最近一轮「去 AI 味」改造（Paco / Julian / Rauno 调研结论），把能用上的手法应用到本站。
+- 落地：
+  1. 新增 `--display-serif`（Latin 保持 Arial Narrow，中文落入 Songti SC/STSong 衬线），应用于 hero h1、page-hero h1、section-head h2、home-brief/directory/feature 标题；衬线字距按 -.02~-.03em 放宽，行高放宽到 1.02–1.08。
+  2. 删除四处自我解释/实现细节文案：「六个核心入口，详细内容进入对应页面」「自动抓取…接入失败时保留账号跳转入口」（改为「@KOSX.ai 在 X 上的最新动态」）、「点击分类后可进入对应成员列表」「项目状态沿用原网站口径…」。
+  3. 页脚去掉「HTML Framework V0.1」开发水印。
+- 保留：编号目录入口（本站签名元素）、项目状态 pill（真实数据口径）、卡片结构；「文案」占位不虚构。
+
+## 2026-08-18 · 开屏改版：移除 KOS，KOSX 直接出场
+
+- 来源：主理人决定开屏不再出现 KOS 母品牌（「不要把 KOS 放进来」）。替代 2026-08-15「开屏品牌动画锁定」中的 KOS→KOSX 连接结构；其余合同（橙金曙光、收入页首、手机端缩短、reduced-motion 跳过）继续有效。
+- 方案：保留横向引导线 + 信号点 + Connect/Create/Collaborate（线条酷感来源），新增竖向橙金扫描边与 `clip-path` 擦除同步的「扫描成标」出场；SLOGAN、入位页首、黑场淡出节奏不变。
+- 参考：obys.agency 细线扫屏、zajno.com / waaark.com 遮罩擦除（2026-08-18 调研：扫线 + 擦除是纯 CSS、PNG 位图 Logo 下成本最低且最贴合的方案）。
+- 备注：`assets/logo/KOS-parent.png` 素材保留备用；合作伙伴页仍有「KOS Solutions」占位卡片，是否保留待与主理人确认。

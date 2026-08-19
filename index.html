@@ -34,6 +34,7 @@
       --max: 1440px;
       --pad: clamp(18px, 2.2vw, 34px);
       --display: "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+      --display-serif: "Arial Narrow", "Helvetica Neue", "Songti SC", "STSong", serif;
       --body: "Helvetica Neue", "PingFang SC", "Noto Sans CJK SC", Arial, sans-serif;
     }
 
@@ -96,52 +97,26 @@
     }
     .intro-skip:hover,
     .intro-skip:focus-visible { border-color: var(--signal); color: var(--signal); outline: 0; }
-    .intro-parent,
     .intro-child {
       position: absolute;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      will-change: left, top, width, opacity, transform;
+      will-change: left, top, width, transform;
     }
-    .intro-parent {
-      width: clamp(220px, 24vw, 330px);
-      opacity: 0;
-    }
-    .intro-parent-label {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--fog);
-      font-size: 9px;
-      letter-spacing: .16em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-    .intro-kos-crop {
-      width: 100%;
-      aspect-ratio: 2.42 / 1;
-      overflow: hidden;
-    }
-    .intro-kos-crop img {
-      width: 100%;
-      height: auto;
-      filter: brightness(1.55);
-      transform: translateY(-1%);
-    }
-    .intro-connection {
+    .intro-track {
       position: absolute;
-      left: 35%;
-      right: 35%;
-      top: 50%;
+      left: max(var(--pad), 6vw);
+      right: max(var(--pad), 6vw);
+      top: calc(50% + clamp(84px, 10vw, 118px));
       height: 68px;
       opacity: 1;
-      transform: translateY(-50%);
     }
     .intro-line {
       position: absolute;
       left: 0;
       right: 0;
-      top: 29px;
+      top: 0;
       height: 1px;
       background: rgba(255, 255, 255, .22);
       transform: scaleX(0);
@@ -175,15 +150,14 @@
     .intro-steps {
       display: flex;
       justify-content: space-between;
-      padding-top: 42px;
+      padding-top: 20px;
       color: var(--mist);
       font-size: 8px;
       letter-spacing: .12em;
       text-transform: uppercase;
     }
     .intro-steps span { opacity: 0; transform: translateY(4px); }
-    .intro-parent,
-    .intro-connection,
+    .intro-track,
     .intro-child { z-index: 2; }
     .intro-dawn {
       position: absolute;
@@ -224,12 +198,28 @@
       transform: rotate(-38deg);
     }
     .intro-child {
-      left: 78%;
-      width: clamp(150px, 14vw, 210px);
-      opacity: 0;
+      width: clamp(210px, 20vw, 300px);
       text-align: center;
     }
-    .intro-child img { width: 100%; height: auto; }
+    .intro-logo-wipe { position: relative; }
+    .intro-logo-wipe img {
+      width: 100%;
+      height: auto;
+      clip-path: inset(0 100% 0 0);
+      will-change: clip-path;
+    }
+    .intro-scan-edge {
+      position: absolute;
+      left: 0;
+      top: -10%;
+      height: 120%;
+      width: 2px;
+      background: linear-gradient(to bottom, transparent, var(--signal) 32%, var(--signal-warm) 50%, var(--signal) 68%, transparent);
+      box-shadow: 0 0 26px rgba(255, 106, 0, .85);
+      opacity: 0;
+      pointer-events: none;
+      will-change: left, opacity;
+    }
     .intro-slogan {
       margin: 18px 0 0;
       color: var(--white);
@@ -239,57 +229,38 @@
       opacity: 0;
       white-space: nowrap;
     }
-    .brand-intro.is-playing .intro-parent {
-      animation:
-        introParentIn .42s .08s cubic-bezier(.22, 1, .36, 1) forwards,
-        introParentShift .52s .56s cubic-bezier(.65, 0, .35, 1) forwards,
-        introParentFade .38s 1.83s ease forwards;
-    }
-    .brand-intro.is-playing .intro-line { animation: introLineGrow .72s .68s cubic-bezier(.65, 0, .35, 1) forwards; }
-    .brand-intro.is-playing .intro-line-signal { animation: introSignalTravel .72s .68s cubic-bezier(.65, 0, .35, 1) forwards; }
-    .brand-intro.is-playing .intro-steps span:nth-child(1) { animation: introStepIn .22s .76s ease-out forwards; }
-    .brand-intro.is-playing .intro-steps span:nth-child(2) { animation: introStepIn .22s 1.02s ease-out forwards; }
-    .brand-intro.is-playing .intro-steps span:nth-child(3) { animation: introStepIn .22s 1.28s ease-out forwards; }
-    .brand-intro.is-playing .intro-connection { animation: introConnectionFade .36s 1.84s ease forwards; }
-    .brand-intro.is-playing .intro-dawn { animation: introDawnRise 1.42s 1.3s cubic-bezier(.22, 1, .36, 1) forwards; }
-    .brand-intro.is-playing .intro-child {
-      animation:
-        introChildIn .34s 1.35s cubic-bezier(.22, 1, .36, 1) forwards,
-        introChildCenter .42s 1.86s cubic-bezier(.65, 0, .35, 1) forwards,
-        introChildDock .54s 2.58s cubic-bezier(.65, 0, .35, 1) forwards;
-    }
+    .brand-intro.is-playing .intro-line { animation: introLineGrow .66s .18s cubic-bezier(.65, 0, .35, 1) forwards; }
+    .brand-intro.is-playing .intro-line-signal { animation: introSignalTravel .66s .18s cubic-bezier(.65, 0, .35, 1) forwards; }
+    .brand-intro.is-playing .intro-steps span:nth-child(1) { animation: introStepIn .22s .32s ease-out forwards; }
+    .brand-intro.is-playing .intro-steps span:nth-child(2) { animation: introStepIn .22s .54s ease-out forwards; }
+    .brand-intro.is-playing .intro-steps span:nth-child(3) { animation: introStepIn .22s .76s ease-out forwards; }
+    .brand-intro.is-playing .intro-track { animation: introTrackFade .3s 1.02s ease forwards; }
+    .brand-intro.is-playing .intro-logo-wipe img { animation: introLogoWipe .8s .95s cubic-bezier(.65, 0, .35, 1) forwards; }
+    .brand-intro.is-playing .intro-scan-edge { animation: introScanTravel .8s .95s cubic-bezier(.65, 0, .35, 1) forwards; }
+    .brand-intro.is-playing .intro-dawn { animation: introDawnRise 1.42s 1.08s cubic-bezier(.22, 1, .36, 1) forwards; }
+    .brand-intro.is-playing .intro-child { animation: introChildDock .54s 2.62s cubic-bezier(.65, 0, .35, 1) forwards; }
     .brand-intro.is-playing .intro-slogan {
       animation:
-        introSloganIn .28s 2.03s ease-out forwards,
-        introSloganOut .18s 2.58s ease-in forwards;
+        introSloganIn .28s 1.84s ease-out forwards,
+        introSloganOut .18s 2.56s ease-in forwards;
     }
-    .brand-intro.is-playing { animation: introReveal .62s 2.92s ease-in-out forwards; }
+    .brand-intro.is-playing { animation: introReveal .62s 3.22s ease-in-out forwards; }
     .brand-intro.is-skipping { display: block; animation: introSkip .16s ease-out forwards; }
     .brand-intro.is-reduced { display: block; animation: introSkip .15s .12s ease-out forwards; }
-    .brand-intro.is-reduced .intro-child { left: 50%; width: min(210px, 50vw); opacity: 1; }
+    .brand-intro.is-reduced .intro-child { left: 50%; width: min(210px, 50vw); }
+    .brand-intro.is-reduced .intro-logo-wipe img { clip-path: none; }
     .brand-intro.is-reduced .intro-slogan { opacity: 1; }
+    .brand-intro.is-reduced .intro-track,
     .brand-intro.is-reduced .intro-dawn { display: none; }
 
     html.intro-pending .site-header,
     html.intro-pending .hero h1,
     html.intro-pending .hero-bottom { opacity: 0; }
-    html.intro-revealing .site-header { animation: introPageIn .46s 2.9s ease-out forwards; }
-    html.intro-revealing .hero h1 { animation: introHeroIn .56s 2.95s cubic-bezier(.22, 1, .36, 1) forwards; }
-    html.intro-revealing .hero-bottom { animation: introPageIn .44s 3.05s ease-out forwards; }
+    html.intro-revealing .site-header { animation: introPageIn .46s 3.18s ease-out forwards; }
+    html.intro-revealing .hero h1 { animation: introHeroIn .56s 3.23s cubic-bezier(.22, 1, .36, 1) forwards; }
+    html.intro-revealing .hero-bottom { animation: introPageIn .44s 3.33s ease-out forwards; }
 
     @keyframes introGridIn { to { opacity: 1; } }
-    @keyframes introParentIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(.975); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-    @keyframes introParentShift {
-      from { left: 50%; opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      to { left: 21%; opacity: .9; transform: translate(-50%, -50%) scale(.82); }
-    }
-    @keyframes introParentFade {
-      from { opacity: .9; }
-      to { opacity: 0; }
-    }
     @keyframes introLineGrow { to { transform: scaleX(1); } }
     @keyframes introSignalTravel {
       0% { left: 0; opacity: 0; }
@@ -298,14 +269,13 @@
       100% { left: 100%; opacity: 0; }
     }
     @keyframes introStepIn { to { opacity: 1; transform: translateY(0); } }
-    @keyframes introConnectionFade { to { opacity: 0; transform: translateY(-50%) scaleX(.86); } }
-    @keyframes introChildIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(.96); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-    @keyframes introChildCenter {
-      from { left: 78%; width: clamp(150px, 14vw, 210px); }
-      to { left: 50%; width: clamp(210px, 20vw, 300px); }
+    @keyframes introTrackFade { to { opacity: 0; transform: translateY(4px); } }
+    @keyframes introLogoWipe { to { clip-path: inset(0 0 0 0); } }
+    @keyframes introScanTravel {
+      0% { left: 0; opacity: 0; }
+      8% { opacity: 1; }
+      88% { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
     }
     @keyframes introChildDock {
       from { left: 50%; top: 50%; width: clamp(210px, 20vw, 300px); transform: translate(-50%, -50%); }
@@ -455,11 +425,11 @@
     .hero h1 {
       max-width: 1080px;
       margin: 16px 0 0;
-      font-family: var(--display);
+      font-family: var(--display-serif);
       font-size: clamp(42px, 5.25vw, 78px);
       font-weight: 400;
-      line-height: .95;
-      letter-spacing: -.045em;
+      line-height: 1.02;
+      letter-spacing: -.03em;
     }
     .hero h1 span { display: block; }
     .hero-mark { align-self: start; justify-self: end; width: 76px; }
@@ -508,11 +478,11 @@
     .section-head h2,
     .page-hero h1 {
       margin: 0;
-      font-family: var(--display);
+      font-family: var(--display-serif);
       font-size: clamp(40px, 5vw, 78px);
       font-weight: 400;
-      line-height: .98;
-      letter-spacing: -.045em;
+      line-height: 1.04;
+      letter-spacing: -.03em;
     }
     .section-head .lead { max-width: 760px; margin: 18px 0 0; font-size: clamp(17px, 1.5vw, 22px); }
     .section-head .copy { max-width: 670px; margin: 20px 0 0; color: var(--muted); }
@@ -552,11 +522,11 @@
     .home-brief h2 {
       max-width: 620px;
       margin: 22px 0 0;
-      font-family: var(--display);
+      font-family: var(--display-serif);
       font-size: clamp(30px, 3.2vw, 46px);
       font-weight: 400;
-      line-height: 1.02;
-      letter-spacing: -.04em;
+      line-height: 1.08;
+      letter-spacing: -.025em;
     }
     .home-brief p { max-width: 600px; margin: 18px 0 0; color: var(--muted); }
     .home-principles { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; border-top: 1px solid var(--line); }
@@ -573,10 +543,10 @@
     }
     .home-directory-head h2 {
       margin: 0;
-      font-family: var(--display);
+      font-family: var(--display-serif);
       font-size: clamp(28px, 3vw, 42px);
       font-weight: 400;
-      letter-spacing: -.035em;
+      letter-spacing: -.02em;
     }
     .home-directory-head p { margin: 0; color: var(--muted); font-size: 13px; }
     .home-directory {
@@ -628,11 +598,11 @@
     }
     .home-feature-head h2 {
       margin: 7px 0 0;
-      font-family: var(--display);
+      font-family: var(--display-serif);
       font-size: clamp(28px, 3vw, 42px);
       font-weight: 400;
       line-height: 1;
-      letter-spacing: -.035em;
+      letter-spacing: -.02em;
     }
     .home-feature-head p { max-width: 520px; margin: 0; color: var(--muted); font-size: 13px; }
     .home-partner-grid {
@@ -848,33 +818,22 @@
       .home-insights-feed { border-left: 0; border-top: 1px solid #3a3a3a; }
       .home-insight-row { grid-template-columns: 70px 1fr auto; gap: 12px; padding: 18px; }
       .intro-skip { top: 14px; }
-      .intro-parent { top: 35%; width: min(205px, 58vw); }
-      .intro-parent-label { margin-bottom: 6px; }
-      .intro-connection { left: 24%; right: 24%; top: 54%; height: 44px; }
-      .intro-line { top: 20px; }
+      .intro-track { left: var(--pad); right: var(--pad); top: calc(50% + 76px); height: 30px; }
       .intro-steps { display: none; }
       .intro-dawn { right: -72vw; bottom: -78vw; width: 160vw; }
-      .intro-child { left: 50%; top: 68%; width: min(172px, 46vw); }
+      .intro-child { width: min(220px, 58vw); }
       .intro-slogan { margin-top: 13px; font-size: 9px; }
-      .brand-intro.is-playing .intro-parent {
-        animation:
-          introParentIn .3s .04s cubic-bezier(.22, 1, .36, 1) forwards,
-          introParentFadeMobile .22s .63s ease forwards;
-      }
-      .brand-intro.is-playing .intro-line { animation: introLineGrow .36s .3s cubic-bezier(.65, 0, .35, 1) forwards; }
-      .brand-intro.is-playing .intro-line-signal { animation: introSignalTravel .36s .3s cubic-bezier(.65, 0, .35, 1) forwards; }
-      .brand-intro.is-playing .intro-connection { animation: introConnectionFade .2s .66s ease forwards; }
-      .brand-intro.is-playing .intro-dawn { animation: introDawnRise .58s .62s cubic-bezier(.22, 1, .36, 1) forwards; }
-      .brand-intro.is-playing .intro-child {
-        animation:
-          introMobileChildIn .28s .64s cubic-bezier(.22, 1, .36, 1) forwards,
-          introMobileChildCenter .24s .9s cubic-bezier(.65, 0, .35, 1) forwards;
-      }
-      .brand-intro.is-playing .intro-slogan { animation: introSloganIn .18s .9s ease-out forwards; }
-      .brand-intro.is-playing { animation: introReveal .3s 1.2s cubic-bezier(.65, 0, .35, 1) forwards; }
-      html.intro-revealing .site-header { animation: introPageIn .3s 1.18s ease-out forwards; }
-      html.intro-revealing .hero h1 { animation: introHeroIn .34s 1.2s cubic-bezier(.22, 1, .36, 1) forwards; }
-      html.intro-revealing .hero-bottom { animation: introPageIn .28s 1.28s ease-out forwards; }
+      .brand-intro.is-playing .intro-line { animation: introLineGrow .34s .1s cubic-bezier(.65, 0, .35, 1) forwards; }
+      .brand-intro.is-playing .intro-line-signal { animation: introSignalTravel .34s .1s cubic-bezier(.65, 0, .35, 1) forwards; }
+      .brand-intro.is-playing .intro-track { animation: introTrackFade .2s .5s ease forwards; }
+      .brand-intro.is-playing .intro-logo-wipe img { animation: introLogoWipe .48s .44s cubic-bezier(.65, 0, .35, 1) forwards; }
+      .brand-intro.is-playing .intro-scan-edge { animation: introScanTravel .48s .44s cubic-bezier(.65, 0, .35, 1) forwards; }
+      .brand-intro.is-playing .intro-dawn { animation: introDawnRise .58s .5s cubic-bezier(.22, 1, .36, 1) forwards; }
+      .brand-intro.is-playing .intro-slogan { animation: introSloganIn .18s .8s ease-out forwards; }
+      .brand-intro.is-playing { animation: introReveal .3s 1.22s cubic-bezier(.65, 0, .35, 1) forwards; }
+      html.intro-revealing .site-header { animation: introPageIn .3s 1.2s ease-out forwards; }
+      html.intro-revealing .hero h1 { animation: introHeroIn .34s 1.22s cubic-bezier(.22, 1, .36, 1) forwards; }
+      html.intro-revealing .hero-bottom { animation: introPageIn .28s 1.3s ease-out forwards; }
       .content-row { grid-template-columns: 38px 1fr auto; min-height: 66px; gap: 12px; }
       .content-row p { display: none; }
       .section-head, .page-hero { grid-template-columns: 1fr; gap: 18px; }
@@ -884,19 +843,6 @@
       .card.wide { grid-column: span 1; }
       .site-footer { grid-template-columns: 1fr; }
       .footer-bottom { grid-column: 1; flex-direction: column; }
-    }
-
-    @keyframes introMobileChildIn {
-      from { opacity: 0; transform: translate(-50%, -50%) scale(.96); }
-      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-    @keyframes introParentFadeMobile {
-      from { opacity: 1; }
-      to { opacity: 0; }
-    }
-    @keyframes introMobileChildCenter {
-      from { top: 68%; width: min(172px, 46vw); }
-      to { top: 50%; width: min(220px, 58vw); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -912,19 +858,15 @@
 <body>
   <a class="skip-link" href="#content">跳至主要内容</a>
 
-  <div class="brand-intro" id="brand-intro" aria-label="KOS 与 KOSX 品牌连接开屏">
+  <div class="brand-intro" id="brand-intro" aria-label="KOSX 品牌开屏">
     <button class="intro-skip" id="intro-skip" type="button">Skip intro</button>
-    <div class="intro-parent">
-      <span class="intro-parent-label">From the KOS ecosystem</span>
-      <div class="intro-kos-crop"><img src="assets/logo/KOS-parent.png" alt="KOS"></div>
-    </div>
-    <div class="intro-connection" aria-hidden="true">
+    <div class="intro-track" aria-hidden="true">
       <div class="intro-line"><span class="intro-line-signal"></span></div>
       <div class="intro-steps"><span>Connect</span><span>Create</span><span>Collaborate</span></div>
     </div>
     <div class="intro-dawn" aria-hidden="true"></div>
     <div class="intro-child">
-      <img src="assets/logo/KOSX logo White.png" alt="KOSX.ai">
+      <div class="intro-logo-wipe"><img src="assets/logo/KOSX logo White.png" alt="KOSX.ai"><span class="intro-scan-edge" aria-hidden="true"></span></div>
       <p class="intro-slogan">BUILD SOMETHING REAL.</p>
     </div>
   </div>
@@ -985,7 +927,6 @@
         <section aria-labelledby="home-directory-title">
           <div class="home-directory-head">
             <div><div class="section-label">03 / Explore KOSX</div><h2 id="home-directory-title">这里正在发生什么<span class="accent">?</span></h2></div>
-            <p>六个核心入口，详细内容进入对应页面。</p>
           </div>
           <div class="home-directory" aria-label="首页六个核心入口">
             <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">01</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">搞钱研究所</span><span class="home-entry-description">内容更新、周报与对外输出。</span></span></button>
@@ -1016,7 +957,7 @@
           <div class="home-insights">
             <div class="home-insights-intro">
               <div><div class="kicker">05 / Live signal</div><h2 id="home-insights-title">Insights<br>from X</h2></div>
-              <p>自动抓取 @KOSX.ai 的公开动态<br>接入失败时保留账号跳转入口</p>
+              <p>@KOSX.ai 在 X 上的最新动态</p>
             </div>
             <div class="home-insights-feed" aria-label="X 动态占位">
               <article class="home-insight-row"><span class="meta">X Post / 01</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
@@ -1055,7 +996,7 @@
           </div>
         </section>
         <section class="section">
-          <div class="section-head"><div class="section-label">Member Groups</div><div><h2>成员分类</h2><p class="lead">点击分类后可进入对应成员列表。</p></div></div>
+          <div class="section-head"><div class="section-label">Member Groups</div><div><h2>成员分类</h2></div></div>
           <div class="grid three">
             <article class="card"><span class="index-no">01</span><h3>Internship</h3><p>可可鸭 · 子豪 · 安寻 · 梁爽</p></article>
             <article class="card"><span class="index-no">02</span><h3>Mentors</h3><p>Edison · Jasper Wei</p></article>
@@ -1149,7 +1090,7 @@
           </div>
         </section>
         <section class="section">
-          <div class="section-head"><div class="section-label">Projects</div><div><h2>项目库</h2><p class="lead">项目状态沿用原网站口径：已完成、进行中、待确认。</p></div></div>
+          <div class="section-head"><div class="section-label">Projects</div><div><h2>项目库</h2></div></div>
           <div class="tabs"><span class="chip active">全部</span><span class="chip">已完成</span><span class="chip">进行中</span><span class="chip">待确认</span></div>
           <div class="grid three">
             <article class="card tall dark"><div class="card-top"><span class="status done">已完成</span><span class="meta">Project 01</span></div><div class="placeholder">项目图片 / Demo</div><div><h3>微信群 AI 助手</h3><p>参与人 · 成果 · 项目链接</p></div></article>
@@ -1205,7 +1146,7 @@
       <span class="eyebrow">Elsewhere</span>
       <span>X / Twitter</span><span>抖音</span><span>Bilibili</span><span>微信视频号</span>
     </div>
-    <div class="footer-bottom"><span>© 2026 KOSX.ai · HTML Framework V0.1</span><span>Privacy · Terms · ICP</span></div>
+    <div class="footer-bottom"><span>© 2026 KOSX.ai</span><span>Privacy · Terms · ICP</span></div>
   </footer>
 
   <script>
@@ -1257,7 +1198,7 @@
       brandIntro.classList.add(reducedMotion ? "is-reduced" : "is-playing");
       introTimer = window.setTimeout(
         () => finishIntro(false),
-        reducedMotion ? 290 : (mobileIntro ? 1530 : 3580)
+        reducedMotion ? 290 : (mobileIntro ? 1560 : 3880)
       );
     }
 
