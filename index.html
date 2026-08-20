@@ -219,7 +219,6 @@
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       min-height: 64px;
-      border-bottom: 1px solid rgba(255, 255, 255, .1);
       background: rgba(10, 10, 10, .88);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
@@ -307,12 +306,8 @@
       display: grid;
       grid-template-rows: 1fr auto;
       padding: var(--pad);
-      border-bottom: 1px solid var(--line);
       background-image:
-        radial-gradient(circle at 88% 28%, rgba(255, 106, 0, .19), transparent 20%),
-        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
-      background-size: auto, 64px 64px, 64px 64px;
+        radial-gradient(circle at 88% 28%, rgba(255, 106, 0, .16), transparent 22%);
     }
     .hero-main {
       display: grid;
@@ -339,7 +334,6 @@
       gap: 22px;
       align-items: end;
       padding: 16px 0 2px;
-      border-top: 1px solid var(--line);
     }
     .hero-bottom p { margin: 0; max-width: 590px; font-size: clamp(14px, 1vw, 16px); }
     .button-row { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -366,7 +360,6 @@
 
     .section {
       padding: clamp(52px, 7vw, 104px) var(--pad);
-      border-bottom: 1px solid var(--line);
     }
     .section-head {
       display: grid;
@@ -392,7 +385,6 @@
       gap: 30px;
       min-height: 40vh;
       padding: clamp(60px, 8vw, 110px) var(--pad) 44px;
-      border-bottom: 1px solid var(--line);
     }
     .page-hero h1 { max-width: 980px; font-size: clamp(52px, 6.5vw, 100px); }
     .page-intro {
@@ -400,37 +392,57 @@
       grid-template-columns: 1fr 1fr;
       gap: 30px;
       padding: 24px var(--pad);
-      border-bottom: 1px solid var(--line);
     }
     .page-intro p { margin: 0; max-width: 680px; }
 
-    .home-brief {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: 12px;
-      padding: 14px var(--pad) 30px;
-      border-bottom: 1px solid var(--line);
+    .hero-trust {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      padding: 15px var(--pad) 26px;
     }
-    .home-brief-panel {
-      min-height: 210px;
-      padding: 26px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--soft-surface);
+    .hero-trust-label {
+      flex: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      white-space: nowrap;
     }
-    .home-brief h2 {
-      max-width: 620px;
-      margin: 22px 0 0;
+    .hero-trust-label::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--signal);
+    }
+    .hero-trust-marquee { flex: 1; min-width: 0; padding: 0; border-top: 0; cursor: pointer; }
+
+    .home-about {
+      padding: clamp(28px, 4vw, 48px) var(--pad) 30px;
+    }
+    .home-about h2 {
+      max-width: 900px;
+      margin: 14px 0 0;
       font-family: var(--display);
-      font-size: clamp(30px, 3.2vw, 46px);
+      font-size: clamp(32px, 3.6vw, 54px);
       font-weight: 500;
-      line-height: 1.08;
+      line-height: 1.05;
       letter-spacing: -.025em;
     }
-    .home-brief p { max-width: 600px; margin: 18px 0 0; color: var(--muted); }
-    .home-principles { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; border-top: 1px solid var(--line); }
+    .home-about-lead {
+      max-width: 720px;
+      margin: 18px 0 0;
+      font-size: clamp(17px, 1.5vw, 22px);
+    }
+    .home-about-copy { max-width: 600px; margin: 14px 0 0; color: var(--muted); }
+    .home-about .home-principles { margin-top: 30px; }
+    .home-principles { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; }
     .home-principle { padding: 14px 14px 0 0; }
-    .home-principle + .home-principle { padding-left: 14px; border-left: 1px solid var(--line); }
+    .home-principle + .home-principle { padding-left: 14px; }
     .home-principle strong { display: block; margin-top: 8px; font-size: 15px; font-weight: 500; }
 
     .home-directory-head {
@@ -452,8 +464,7 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
-      padding: 0 var(--pad) 30px;
-      border-bottom: 1px solid var(--line);
+      padding: 0 var(--pad) clamp(40px, 5vw, 64px);
     }
     .home-entry {
       min-height: 142px;
@@ -463,15 +474,14 @@
       justify-content: space-between;
       gap: 18px;
       padding: 17px 18px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 16px;
       background: var(--soft-surface);
       cursor: pointer;
       text-align: left;
       transition: background-color .18s ease, color .18s ease, transform .18s ease;
     }
     .home-entry:hover,
-    .home-entry:focus-visible { border-color: rgba(255, 106, 0, .52); background: var(--surface); color: var(--ink); outline: 0; transform: translateY(-2px); }
+    .home-entry:focus-visible { background: var(--surface); color: var(--ink); outline: 0; transform: translateY(-2px); }
     .home-entry-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
     .home-entry-copy { display: block; }
     .home-entry-title { display: block; font-size: clamp(18px, 1.5vw, 23px); font-weight: 500; letter-spacing: -.025em; }
@@ -482,11 +492,9 @@
     .home-entry:focus-visible .index-no { color: var(--muted); }
     .home-entry-arrow { font-size: 15px; }
 
-    .home-partners,
     .home-insights-section,
     .home-latest {
-      padding: 30px var(--pad);
-      border-bottom: 1px solid var(--line);
+      padding: clamp(40px, 5vw, 64px) var(--pad);
     }
     .home-feature-head {
       display: flex;
@@ -507,14 +515,13 @@
     .partner-marquee {
       overflow: hidden;
       padding: 20px 0 8px;
-      border-top: 1px solid var(--line);
       mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
       -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     }
     .partner-marquee-track {
       display: flex;
       width: max-content;
-      animation: partnerMarquee 26s linear infinite;
+      animation: partnerMarquee 40s linear infinite;
     }
     .partner-marquee:hover .partner-marquee-track { animation-play-state: paused; }
     .partner-marquee-group {
@@ -529,7 +536,8 @@
       gap: 10px;
       white-space: nowrap;
     }
-    .partner-marquee-item strong { font-size: 17px; font-weight: 500; letter-spacing: -.01em; }
+    .partner-marquee-item strong { color: rgba(255, 255, 255, .55); font-size: 16px; font-weight: 500; letter-spacing: -.01em; transition: color .18s ease; }
+    .partner-marquee-item:hover strong { color: var(--white); }
     .partner-marquee-item span { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
     @keyframes partnerMarquee { to { transform: translateX(-50%); } }
     @media (prefers-reduced-motion: reduce) {
@@ -542,53 +550,69 @@
       display: grid;
       grid-template-columns: minmax(250px, .72fr) 2fr;
       overflow: hidden;
-      border-radius: var(--radius);
-      border: 1px solid #303034;
+      border-radius: 20px;
       background-color: #050505;
       background-image:
-        radial-gradient(circle at 96% 116%, rgba(255, 106, 0, .5), transparent 28%),
-        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
-      background-size: auto, 48px 48px, 48px 48px;
+        radial-gradient(circle at 96% 116%, rgba(255, 106, 0, .5), transparent 28%);
       color: var(--white);
     }
     .home-insights-intro { display: flex; flex-direction: column; justify-content: space-between; padding: 28px; }
     .home-insights-intro h2 { margin: 12px 0 0; font-size: clamp(32px, 3.4vw, 52px); font-weight: 500; line-height: .95; letter-spacing: -.04em; }
     .home-insights-intro p { margin: 0; color: #bdbdbd; font-size: 12px; }
-    .home-insights-feed { display: grid; align-content: stretch; border-left: 1px solid #3a3a3a; }
-    .home-insight-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 20px; align-items: center; padding: 22px 24px; border-bottom: 1px solid #3a3a3a; }
+    .home-insights-feed { display: grid; align-content: stretch; border-left: 1px solid #26262a; }
+    .home-insight-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 20px; align-items: center; padding: 22px 24px; border-bottom: 1px solid #26262a; }
     .home-insight-row:last-child { border-bottom: 0; }
     .home-insight-row .meta { color: #8f8f8f; }
     .home-insight-row p { margin: 0; color: #d0d0d0; }
     .home-insight-row .home-entry-arrow { color: var(--signal); }
-    .text-link { padding: 0 0 3px; border: 0; border-bottom: 1px solid currentColor; background: transparent; cursor: pointer; font-size: 11px; }
-    .text-link:hover { color: var(--signal); }
-    .home-event-rail {
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(210px, 1fr);
-      gap: 12px;
-      overflow-x: auto;
-      padding-bottom: 4px;
-      scroll-snap-type: x proximity;
+    .event-marquee {
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
     }
-    .home-event-card { min-height: 164px; display: grid; grid-template-rows: 76px auto; border-top: 1px solid var(--line); scroll-snap-align: start; }
-    .home-event-thumb { display: grid; place-items: center; margin-top: 10px; border-radius: 9px; background: var(--surface); color: var(--muted); font-size: 10px; letter-spacing: .08em; }
-    .home-event-copy { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding-top: 11px; }
-    .home-event-copy h3 { margin: 0; font-size: 16px; font-weight: 500; }
-    .home-event-copy p { margin: 3px 0 0; color: var(--muted); font-size: 11px; }
+    .event-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: eventMarquee 36s linear infinite;
+    }
+    .event-marquee:hover .event-marquee-track { animation-play-state: paused; }
+    .event-marquee-group {
+      display: flex;
+      gap: 16px;
+      padding-right: 16px;
+    }
+    @keyframes eventMarquee { to { transform: translateX(-33.3333%); } }
+    .event-card {
+      width: clamp(240px, 26vw, 340px);
+      flex: none;
+      overflow: hidden;
+      border-radius: 16px;
+      background: var(--soft-surface);
+      cursor: pointer;
+      text-align: left;
+      transition: background-color .18s ease, transform .18s ease;
+    }
+    .event-card:hover { background: var(--surface); transform: translateY(-2px); }
+    .event-card-media { aspect-ratio: 16 / 10; background: var(--surface); }
+    .event-card-body { padding: 14px 16px 18px; }
+    .event-card-meta { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+    .event-card-tag { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .event-card-title { min-height: 22px; margin: 12px 0 0; font-size: 17px; font-weight: 500; }
+    .event-card-desc { min-height: 32px; margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    @media (prefers-reduced-motion: reduce) {
+      .event-marquee { mask-image: none; -webkit-mask-image: none; overflow-x: auto; }
+      .event-marquee-track { animation: none; }
+    }
 
-    .content-index { border-bottom: 1px solid var(--line); }
+    .content-index { }
     .content-row {
       display: grid;
       grid-template-columns: 48px 1.2fr 1fr auto;
       gap: 20px;
       align-items: center;
       min-height: 72px;
-      padding: 13px var(--pad);
-      border-top: 1px solid var(--line);
+      padding: 18px var(--pad);
     }
-    .content-row:first-child { border-top: 0; }
     .content-row h3 { margin: 0; font-size: clamp(18px, 1.8vw, 24px); font-weight: 500; letter-spacing: -.025em; }
     .content-row p { margin: 0; color: var(--muted); font-size: 13px; }
     .arrow { font-size: 16px; }
@@ -604,16 +628,15 @@
       justify-content: space-between;
       gap: 24px;
       padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: 16px;
       background: var(--soft-surface);
     }
     .card h3 { margin: 0; font-size: clamp(22px, 1.8vw, 32px); font-weight: 500; line-height: 1.08; letter-spacing: -.03em; }
     .card p { margin: 0; color: var(--muted); }
     .card-top { display: flex; justify-content: space-between; align-items: start; gap: 20px; }
-    .card.signal { border-color: rgba(255, 106, 0, .34); background: rgba(255, 106, 0, .09); color: var(--ink); }
+    .card.signal { background: rgba(255, 106, 0, .09); color: var(--ink); }
     .card.signal p, .card.signal .meta, .card.signal .eyebrow, .card.signal .index-no { color: var(--muted); }
-    .card.dark { border-color: #343438; background: #050505; color: var(--white); }
+    .card.dark { background: #050505; color: var(--white); }
     .card.dark p, .card.dark .meta { color: #bdbdbd; }
     .card.wide { grid-column: span 2; }
     .card.tall { min-height: 360px; }
@@ -631,7 +654,7 @@
     }
 
     .people-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-    .person { min-height: 290px; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--soft-surface); display: flex; flex-direction: column; justify-content: space-between; }
+    .person { min-height: 290px; padding: 20px; border-radius: 16px; background: var(--soft-surface); display: flex; flex-direction: column; justify-content: space-between; }
     .person-portrait { aspect-ratio: 4 / 3; display: grid; place-items: center; border-radius: 10px; background: var(--surface); color: var(--muted); font-size: 11px; letter-spacing: .08em; }
     .person h3 { margin: 18px 0 2px; font-size: 22px; font-weight: 500; }
     .person p { margin: 0; color: var(--muted); font-size: 13px; }
@@ -655,11 +678,11 @@
       color: var(--white);
     }
     .ticker-block h3 { margin: 0; font-size: clamp(32px, 4vw, 60px); font-weight: 500; line-height: 1; }
-    .feed-placeholder { min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; padding: 22px; border: 1px solid #555555; border-radius: 10px; }
+    .feed-placeholder { min-height: 260px; display: flex; flex-direction: column; justify-content: space-between; padding: 22px; border-radius: 10px; background: rgba(255, 255, 255, .04); }
     .feed-placeholder p { margin: 0; color: #bdbdbd; }
 
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .form-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--soft-surface); padding: clamp(28px, 4vw, 60px); }
+    .form-panel { border-radius: 16px; background: var(--soft-surface); padding: clamp(28px, 4vw, 60px); }
     .form-panel h2 { margin: 0 0 40px; font-size: clamp(38px, 5vw, 72px); font-weight: 500; line-height: 1; letter-spacing: -.045em; }
     .field { display: grid; gap: 8px; margin-top: 24px; }
     .field label { font-size: 12px; }
@@ -689,7 +712,7 @@
     .footer-nav { display: grid; gap: 9px; align-content: start; font-size: 13px; }
     .footer-nav button { width: fit-content; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; }
     .footer-nav button:hover { color: var(--signal); }
-    .footer-bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 25px; margin-top: 40px; padding-top: 18px; border-top: 1px solid #4a4a4a; color: #aaaaaa; font-size: 11px; }
+    .footer-bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 25px; margin-top: 40px; padding-top: 18px; color: #aaaaaa; font-size: 11px; }
 
     @media (max-width: 1050px) {
       .site-header { grid-template-columns: 145px minmax(0, 1fr) auto; }
@@ -710,24 +733,29 @@
     @media (max-width: 700px) {
       .site-header { position: static; grid-template-columns: 1fr auto; }
       .brand { border-right: 0; }
-      .main-nav { grid-column: 1 / -1; order: 3; display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; overflow: visible; padding: 7px var(--pad) 11px; border-top: 1px solid rgba(255, 255, 255, .08); }
+      .main-nav { grid-column: 1 / -1; order: 3; display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; overflow: visible; padding: 7px var(--pad) 11px; }
       .nav-link { min-height: 38px; margin: 0; background: var(--soft-surface); }
       .contact-link { min-height: 36px; }
       .hero-main { grid-template-columns: 1fr; padding-top: 42px; }
       .hero-mark { justify-self: start; width: 56px; order: -1; }
       .hero h1 { font-size: clamp(38px, 11vw, 54px); }
-      .home-brief { grid-template-columns: 1fr; gap: 10px; padding-block: 12px 24px; }
-      .home-brief-panel { min-height: 0; padding: 22px; }
+      .hero-trust { flex-wrap: wrap; gap: 10px 16px; padding: 14px var(--pad); }
+      .hero-trust-label { flex: 1; }
+      .hero-trust-marquee { order: 3; flex-basis: 100%; }
+      .hero-trust-marquee .partner-marquee-track { animation: none; flex-wrap: wrap; row-gap: 12px; width: auto; }
+      .hero-trust-marquee .partner-marquee-group { flex-wrap: wrap; row-gap: 12px; padding-right: 0; }
+      .hero-trust-marquee .partner-marquee-group[aria-hidden="true"] { display: none; }
+      .home-about { padding: 24px var(--pad) 22px; }
       .home-directory-head { align-items: start; flex-direction: column; padding-block: 24px 16px; }
       .home-directory { gap: 10px; padding-bottom: 24px; }
       .home-entry { min-height: 126px; padding: 15px; }
       .home-entry-title { font-size: 18px; }
       .home-entry-description { display: none; }
-      .home-partners, .home-insights-section, .home-latest { padding-block: 24px; }
+      .home-insights-section, .home-latest { padding-block: 24px; }
       .home-feature-head { align-items: start; flex-direction: column; margin-bottom: 18px; }
       .home-insights { min-height: 0; grid-template-columns: 1fr; }
       .home-insights-intro { min-height: 200px; padding: 24px; }
-      .home-insights-feed { border-left: 0; border-top: 1px solid #3a3a3a; }
+      .home-insights-feed { border-left: 0; border-top: 1px solid #26262a; }
       .home-insight-row { grid-template-columns: 70px 1fr auto; gap: 12px; padding: 18px; }
       .intro-child { top: 50%; width: min(210px, 56vw); }
       .intro-fallback { top: 60%; font-size: 12px; }
@@ -827,42 +855,9 @@
           </div>
         </section>
 
-        <section class="home-brief" aria-label="我们是谁与使命愿景">
-          <article class="home-brief-panel">
-            <div class="section-label">01 / 我们是谁</div>
-            <h2>不是 AI 产品公司，<br>而是创造者网络<span class="accent">.</span></h2>
-            <p>文案</p>
-          </article>
-          <article class="home-brief-panel">
-            <div class="section-label">02 / Mission &amp; Vision</div>
-            <div class="home-principles">
-              <div class="home-principle"><span class="eyebrow">Mission</span><strong>文案</strong></div>
-              <div class="home-principle"><span class="eyebrow">Vision</span><strong>文案</strong></div>
-            </div>
-            <p>文案</p>
-          </article>
-        </section>
-
-        <section aria-labelledby="home-directory-title">
-          <div class="home-directory-head">
-            <div><div class="section-label">03 / Explore KOSX</div><h2 id="home-directory-title">这里正在发生什么<span class="accent">?</span></h2></div>
-          </div>
-          <div class="home-directory" aria-label="首页六个核心入口">
-            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">01</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">搞钱研究所</span><span class="home-entry-description">内容更新、周报与对外输出。</span></span></button>
-            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">02</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">AI Workshop</span><span class="home-entry-description">搞钱研究所旗下活动模块。</span></span></button>
-            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">03</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">灵感市集</span><span class="home-entry-description">搞钱研究所旗下内容模块。</span></span></button>
-            <button class="home-entry nav-trigger" type="button" data-route="kosx-lab"><span class="home-entry-top"><span class="index-no">04</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">KOSX Lab</span><span class="home-entry-description">将想法推进为真实项目。</span></span></button>
-            <button class="home-entry nav-trigger" type="button" data-route="members"><span class="home-entry-top"><span class="index-no">05</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">我们的成员</span><span class="home-entry-description">Core Team、Mentors 与 Builders。</span></span></button>
-            <button class="home-entry nav-trigger" type="button" data-route="activities"><span class="home-entry-top"><span class="index-no">06</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">最新活动</span><span class="home-entry-description">线上、线下、Something New、VersionX。</span></span></button>
-          </div>
-        </section>
-
-        <section class="home-partners" aria-labelledby="home-partners-title">
-          <div class="home-feature-head">
-            <div><div class="section-label">04 / Our Partners</div><h2 id="home-partners-title">合作伙伴<span class="accent">.</span></h2></div>
-            <button class="text-link nav-trigger" type="button" data-route="partners">查看合作伙伴 ↗</button>
-          </div>
-          <div class="partner-marquee" aria-label="合作伙伴，循环滚动展示，悬停暂停">
+        <div class="hero-trust" aria-label="合作伙伴，循环滚动展示，悬停暂停，点击进入合作伙伴页">
+          <span class="hero-trust-label">Trusted by / Building with</span>
+          <div class="partner-marquee hero-trust-marquee nav-trigger" data-route="partners" role="link" tabindex="0">
             <div class="partner-marquee-track">
               <div class="partner-marquee-group">
                 <span class="partner-marquee-item"><span>Vendor / Supplier</span><strong>DingTalk</strong></span>
@@ -882,12 +877,34 @@
               </div>
             </div>
           </div>
+        </div>
+
+        <section class="home-about" aria-labelledby="home-about-title">
+          <div class="section-label">01 / About KOSX</div>
+          <h2 id="home-about-title">我们是谁<span class="accent">.</span></h2>
+          <p class="home-about-lead">不是 AI 产品公司，而是创造者网络<span class="accent">.</span></p>
+          <p class="home-about-copy">文案</p>
+          <div class="home-principles">
+            <div class="home-principle"><span class="eyebrow">Mission</span><strong>文案</strong></div>
+            <div class="home-principle"><span class="eyebrow">Vision</span><strong>文案</strong></div>
+          </div>
+        </section>
+
+        <section aria-labelledby="home-directory-title">
+          <div class="home-directory-head">
+            <div><div class="section-label">02 / How KOSX Works</div><h2 id="home-directory-title">我们如何创造价值<span class="accent">.</span></h2></div>
+          </div>
+          <div class="home-directory" aria-label="首页三个核心入口">
+            <button class="home-entry nav-trigger" type="button" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">01</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">社群与内容</span><span class="home-entry-description">搞钱研究所 · AI Workshop · 灵感市集</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="kosx-lab"><span class="home-entry-top"><span class="index-no">02</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">项目与交付</span><span class="home-entry-description">KOSX Lab · 真实项目 · 商业成果</span></span></button>
+            <button class="home-entry nav-trigger" type="button" data-route="members"><span class="home-entry-top"><span class="index-no">03</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">人与网络</span><span class="home-entry-description">Members · Mentors · Builders</span></span></button>
+          </div>
         </section>
 
         <section class="home-insights-section" aria-labelledby="home-insights-title">
           <div class="home-insights">
             <div class="home-insights-intro">
-              <div><div class="kicker">05 / Live signal</div><h2 id="home-insights-title">Insights<br>from X</h2></div>
+              <div><div class="kicker">03 / Live signal</div><h2 id="home-insights-title">Insights<br>from X</h2></div>
               <p>@KOSX.ai 在 X 上的最新动态</p>
             </div>
             <div class="home-insights-feed" aria-label="X 动态占位">
@@ -900,13 +917,89 @@
 
         <section class="home-latest" aria-labelledby="home-latest-title">
           <div class="home-feature-head">
-            <div><div class="section-label">06 / Latest</div><h2 id="home-latest-title">最新活动<span class="accent">.</span></h2></div>
-            <button class="text-link nav-trigger" type="button" data-route="activities">查看全部 ↗</button>
+            <div><div class="section-label">04 / Latest</div><h2 id="home-latest-title">最新活动<span class="accent">.</span></h2></div>
           </div>
-          <div class="home-event-rail" aria-label="最新活动，可横向滚动">
-            <article class="home-event-card"><div class="home-event-thumb">活动图片</div><div class="home-event-copy"><div><h3>活动标题</h3><p>线上活动 · 日期</p></div><span class="home-entry-arrow">↗</span></div></article>
-            <article class="home-event-card"><div class="home-event-thumb">活动图片</div><div class="home-event-copy"><div><h3>活动标题</h3><p>线下活动 · 日期</p></div><span class="home-entry-arrow">↗</span></div></article>
-            <article class="home-event-card"><div class="home-event-thumb">活动图片</div><div class="home-event-copy"><div><h3>活动标题</h3><p>VersionX · 日期</p></div><span class="home-entry-arrow">↗</span></div></article>
+          <div class="event-marquee" aria-label="最新活动，自动循环展示，悬停暂停，点击进入活动页">
+            <div class="event-marquee-track">
+              <div class="event-marquee-group">
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">01</span><span class="event-card-tag">线上活动</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">02</span><span class="event-card-tag">线下活动</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">03</span><span class="event-card-tag">VersionX</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+              </div>
+              <div class="event-marquee-group" aria-hidden="true">
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">01</span><span class="event-card-tag">线上活动</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">02</span><span class="event-card-tag">线下活动</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">03</span><span class="event-card-tag">VersionX</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+              </div>
+              <div class="event-marquee-group" aria-hidden="true">
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">01</span><span class="event-card-tag">线上活动</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">02</span><span class="event-card-tag">线下活动</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+                <article class="event-card nav-trigger" data-route="activities">
+                  <div class="event-card-media" aria-hidden="true"></div>
+                  <div class="event-card-body">
+                    <div class="event-card-meta"><span class="index-no">03</span><span class="event-card-tag">VersionX</span></div>
+                    <h3 class="event-card-title"></h3>
+                    <p class="event-card-desc"></p>
+                  </div>
+                </article>
+              </div>
+            </div>
           </div>
         </section>
       </div>

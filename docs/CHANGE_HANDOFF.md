@@ -97,3 +97,35 @@
 - 范围内变化：`docs/V1_SPEC.md`、`index.html`
 - 检查：npm run check 通过；puppeteer 桌面两帧（循环位移验证）+ 手机一帧核对；单文件版重新导出
 - 开工基线：3ad583e20b6dd45e7260435e945e2e08a8235c35
+
+## 2026-08-20T08:55:08.455Z · kimi-k3 · 首页重构（GPT 方案）：合作伙伴并入 Hero 信任带（慢速流动+右侧查看全部+手机静态两行）、我们是谁扶正为大标题、六入口降三入口（社群与内容/项目与交付/人与网络），章节重排为 01 About / 02 How KOSX Works / 03 Insights / 04 Latest
+
+- 任务：首页重构：合作伙伴并入 Hero 信任带、我们是谁扶正、六入口降三入口
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 桌面首屏+中段+手机信任带截图核对；单文件版重新导出
+- 开工基线：7aadefdb0b135e1ababdc3ef5df24fab454fb377
+
+## 2026-08-20T09:24:20.780Z · kimi-k3 · 首页去线留空：hero 去坐标纸网格，板块间 1px 横线全移除改大留白，入口卡/card/成员卡/表单/活动卡/Insights 面板全部去描边（圆角 16、hover 底色微亮），保留行级列表细分隔线
+
+- 任务：首页去线留空：拆格子降工程感
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 桌面首屏+中段+手机截图核对；单文件版重新导出
+- 开工基线：7aadefdb0b135e1ababdc3ef5df24fab454fb377
+
+## 2026-08-20T09:40:26.166Z · kimi-k3 · 去指路标签：删信任带「查看全部合作伙伴」链接（流动带整体可点进合作伙伴页）、删最新活动「查看全部 ↗」（活动卡可点进活动页），.text-link 类移除
+
+- 任务：删指路标签：信任带链接、查看全部等，模块自身可点
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 截图核对 + 点击信任带验证跳转 #/partners；单文件版重新导出
+- 开工基线：7aadefdb0b135e1ababdc3ef5df24fab454fb377
+
+## 2026-08-20T09:59:24.105Z · kimi-k3 · 最新活动改自动流动卡片（minimaxi 结构：空图片槽+序号/分类+空文案槽，36s 循环、悬停暂停）；子页面分割线全部移除（page-hero/page-intro/section/content-row/导航底边/页脚），与首页同一去线语言
+
+- 任务：最新活动改自动流动卡片（minimaxi 结构，内容槽留空）
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 桌面活动区两帧（流动位移）+ 成员页去线截图核对；单文件版重新导出
+- 开工基线：7aadefdb0b135e1ababdc3ef5df24fab454fb377
