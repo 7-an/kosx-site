@@ -89,3 +89,11 @@
 - 范围内变化：`docs/V1_SPEC.md`、`index.html`
 - 检查：npm run check 通过；puppeteer 首页+成员页截图核对；单文件版重新导出
 - 开工基线：94690f178ee8df8b0bee0421ef07f6a3bd116fc9
+
+## 2026-08-20T07:58:57.916Z · kimi-k3 · 首页合作伙伴区改无限流动横幅（marquee）：纯 CSS 无缝循环 + 两端渐隐 + 悬停暂停 + 减弱动效静态；合作伙伴页保留网格做详细视图
+
+- 任务：首页合作伙伴区改无限流动横幅（marquee）
+- 认领范围：`index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`
+- 范围内变化：`docs/V1_SPEC.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 桌面两帧（循环位移验证）+ 手机一帧核对；单文件版重新导出
+- 开工基线：3ad583e20b6dd45e7260435e945e2e08a8235c35

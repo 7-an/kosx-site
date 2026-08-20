@@ -47,6 +47,11 @@
 - 来源：用户要求把 Codex 可视化目录中的预览版完整扒出，按刘哥（vegas-liu-site）/西西老师（all-in-ai）模式建立 Codex ↔ Kimi 双向同步。
 - 影响：真源迁至 `/Users/ansyn/Documents/Codex/kosx-site`，原可视化目录冻结为历史快照；协作按 `SYNC_START_HERE.md` 执行。
 
+## 2026-08-20 · 首页合作伙伴区改无限流动横幅
+
+- 来源：总设计师推荐 mantle.xyz 与 zenmux.ai；用户确认方向——合作品牌方做流动，成员信息不做自动流动（可读性差、占位照片流动显廉价，待正式文案与照片后再做入场动效）。
+- 落地：首页合作伙伴区由静态 6 格网格改为无限循环流动横幅（纯 CSS `translateX(-50%)` 无缝循环、两端渐隐遮罩、悬停暂停、`prefers-reduced-motion` 静态回退）；合作伙伴页保留卡片网格做详细视图（动静分工）。参考 mantle「Trusted by」横幅的实现方式（transform marquee + motion-reduce 静态）。
+
 ## 2026-08-19 · 大标题回退标准黑体栈
 
 - 来源：老师反馈字体感觉不好；衬线混排（Songti SC）在 Windows 会退化为中易宋体、Arial Narrow 在无 Office 机器上缺失，跨平台效果不可控。

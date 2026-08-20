@@ -16,7 +16,7 @@ KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前
 
 | 路由 | 名称 | 内容要点 |
 |---|---|---|
-| `home` | 首页 | Hero（定位语 + CTA）、目录入口（搞钱研究所/AI Workshop/灵感市集/KOSX Lab/成员/活动）、合作伙伴露出、最新动态 |
+| `home` | 首页 | Hero（定位语 + CTA）、目录入口（搞钱研究所/AI Workshop/灵感市集/KOSX Lab/成员/活动）、合作伙伴无限流动横幅（悬停暂停、减弱动效静态）、最新动态 |
 | `members` | 成员 | Core Team、Mentors、Builders；信息可公开，真实数据待补 |
 | `activities` | 活动 | 线上、线下、Something New、VersionX；照片与详情后续上传 |
 | `partners` | 合作伙伴 | 合作方展示 |

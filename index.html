@@ -504,23 +504,39 @@
       letter-spacing: -.02em;
     }
     .home-feature-head p { max-width: 520px; margin: 0; color: var(--muted); font-size: 13px; }
-    .home-partner-grid {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 12px;
+    .partner-marquee {
+      overflow: hidden;
+      padding: 20px 0 8px;
+      border-top: 1px solid var(--line);
+      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     }
-    .home-partner-item {
-      min-height: 104px;
+    .partner-marquee-track {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 16px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--soft-surface);
+      width: max-content;
+      animation: partnerMarquee 26s linear infinite;
     }
-    .home-partner-item strong { font-size: 15px; font-weight: 500; }
-    .home-partner-item span { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .partner-marquee:hover .partner-marquee-track { animation-play-state: paused; }
+    .partner-marquee-group {
+      display: flex;
+      align-items: baseline;
+      gap: clamp(40px, 5vw, 76px);
+      padding-right: clamp(40px, 5vw, 76px);
+    }
+    .partner-marquee-item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    .partner-marquee-item strong { font-size: 17px; font-weight: 500; letter-spacing: -.01em; }
+    .partner-marquee-item span { color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    @keyframes partnerMarquee { to { transform: translateX(-50%); } }
+    @media (prefers-reduced-motion: reduce) {
+      .partner-marquee { mask-image: none; -webkit-mask-image: none; }
+      .partner-marquee-track { animation: none; flex-wrap: wrap; width: auto; }
+      .partner-marquee-group { flex-wrap: wrap; padding-right: 0; }
+    }
     .home-insights {
       min-height: 286px;
       display: grid;
@@ -685,7 +701,6 @@
       .hero-main { grid-template-columns: 1fr 76px; padding-top: 46px; }
       .hero-bottom { grid-template-columns: 1fr; }
       .home-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .home-partner-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .home-insights { grid-template-columns: minmax(220px, .8fr) 2fr; }
       .section-head, .page-hero { grid-template-columns: 150px 1fr; }
       .grid.four, .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -710,8 +725,6 @@
       .home-entry-description { display: none; }
       .home-partners, .home-insights-section, .home-latest { padding-block: 24px; }
       .home-feature-head { align-items: start; flex-direction: column; margin-bottom: 18px; }
-      .home-partner-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-      .home-partner-item { min-height: 90px; }
       .home-insights { min-height: 0; grid-template-columns: 1fr; }
       .home-insights-intro { min-height: 200px; padding: 24px; }
       .home-insights-feed { border-left: 0; border-top: 1px solid #3a3a3a; }
@@ -849,13 +862,25 @@
             <div><div class="section-label">04 / Our Partners</div><h2 id="home-partners-title">合作伙伴<span class="accent">.</span></h2></div>
             <button class="text-link nav-trigger" type="button" data-route="partners">查看合作伙伴 ↗</button>
           </div>
-          <div class="home-partner-grid" aria-label="合作伙伴展示">
-            <article class="home-partner-item"><span>Vendor / Supplier</span><strong>DingTalk</strong></article>
-            <article class="home-partner-item"><span>Ecosystem</span><strong>Tencent</strong></article>
-            <article class="home-partner-item"><span>Cloud</span><strong>Tencent Cloud</strong></article>
-            <article class="home-partner-item"><span>AI Tool</span><strong>Workbuddy</strong></article>
-            <article class="home-partner-item"><span>Cloud</span><strong>AWS</strong></article>
-            <article class="home-partner-item"><span>Platform</span><strong>Lark</strong></article>
+          <div class="partner-marquee" aria-label="合作伙伴，循环滚动展示，悬停暂停">
+            <div class="partner-marquee-track">
+              <div class="partner-marquee-group">
+                <span class="partner-marquee-item"><span>Vendor / Supplier</span><strong>DingTalk</strong></span>
+                <span class="partner-marquee-item"><span>Ecosystem</span><strong>Tencent</strong></span>
+                <span class="partner-marquee-item"><span>Cloud</span><strong>Tencent Cloud</strong></span>
+                <span class="partner-marquee-item"><span>AI Tool</span><strong>Workbuddy</strong></span>
+                <span class="partner-marquee-item"><span>Cloud</span><strong>AWS</strong></span>
+                <span class="partner-marquee-item"><span>Platform</span><strong>Lark</strong></span>
+              </div>
+              <div class="partner-marquee-group" aria-hidden="true">
+                <span class="partner-marquee-item"><span>Vendor / Supplier</span><strong>DingTalk</strong></span>
+                <span class="partner-marquee-item"><span>Ecosystem</span><strong>Tencent</strong></span>
+                <span class="partner-marquee-item"><span>Cloud</span><strong>Tencent Cloud</strong></span>
+                <span class="partner-marquee-item"><span>AI Tool</span><strong>Workbuddy</strong></span>
+                <span class="partner-marquee-item"><span>Cloud</span><strong>AWS</strong></span>
+                <span class="partner-marquee-item"><span>Platform</span><strong>Lark</strong></span>
+              </div>
+            </div>
           </div>
         </section>
 
