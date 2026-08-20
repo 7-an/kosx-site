@@ -73,6 +73,7 @@ for (const page of pages) {
 const sitemapPath = resolve(projectRoot, 'sitemap.xml');
 const robotsPath = resolve(projectRoot, 'robots.txt');
 const vercelPath = resolve(projectRoot, 'vercel.json');
+const localParticleBundlePath = resolve(projectRoot, 'assets/vendor/intro-particles.iife.js');
 if (!existsSync(sitemapPath)) failures.push('缺少 sitemap.xml');
 else {
   const sitemap = readFileSync(sitemapPath, 'utf8');
@@ -96,9 +97,22 @@ else {
   }
 }
 
+if (!existsSync(localParticleBundlePath)) failures.push('缺少 file:// 本地预览粒子兼容包');
+else {
+  try {
+    new vm.Script(readFileSync(localParticleBundlePath, 'utf8'));
+  } catch (error) {
+    failures.push(`file:// 粒子兼容包语法错误：${error.message}`);
+  }
+}
+const homeSource = readFileSync(resolve(projectRoot, 'index.html'), 'utf8');
+if (!homeSource.includes('window.location.protocol === "file:"')) failures.push('首页缺少 file:// 本地预览兼容逻辑');
+if (!homeSource.includes('assets/vendor/intro-particles.iife.js')) failures.push('首页未加载 file:// 粒子兼容包');
+if (!homeSource.includes('${localPrefix}${targetRoute}/index.html')) failures.push('首页缺少 file:// 物理子页面链接转换');
+
 if (failures.length) {
   console.error(`check failed:\n- ${failures.join('\n- ')}`);
   process.exit(1);
 }
 
-console.log(`check passed: ${pages.length} 个静态路径、独立 title/description/canonical、可抓取导航与本地资源`);
+console.log(`check passed: ${pages.length} 个静态路径、独立 SEO、可抓取导航、file:// 预览与本地资源`);

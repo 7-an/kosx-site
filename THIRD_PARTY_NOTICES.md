@@ -1,6 +1,7 @@
 # Third-party notices
 
-本项目的开屏粒子模块 `assets/vendor/intro-particles.js` 打包了 Three.js 0.185.1，
+本项目的开屏粒子模块 `assets/vendor/intro-particles.js` 打包了 Three.js 0.185.1；
+`assets/vendor/intro-particles.iife.js` 是同一模块供 `file://` 本地预览使用的 IIFE 构建，
 并移植自 VOIDTYPE（https://github.com/7-an/voidtype，`src/particle-wordmark.ts`）。
 
 ## Three.js license

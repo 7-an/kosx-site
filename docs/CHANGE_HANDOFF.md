@@ -145,3 +145,11 @@
 - 范围内变化：未检测到；如有生成物请另行说明
 - 检查：GitHub Pages run 32358940593 success；线上首页 title/canonical/nav/粒子 canvas；六个深链逐页 H1/当前导航/Logo/无溢出；控制台无 error/warning；旧 ?v=c9e6220#/members 跳转 /kosx-site/members/
 - 开工基线：b54463d8e8866031ee2ba7d2f0ad778dcb5b71f6
+
+## 2026-08-20T10:35:42.946Z · codex · 首页粒子开屏增加 5 秒自动进入 Hero：保留滚轮、上滑、双箭头和键盘提前进入；手动进入会清除自动计时，reduced-motion 与静态降级同样受 5 秒上限
+
+- 任务：首页粒子开屏 5 秒后自动进入 Hero
+- 认领范围：`*`
+- 范围内变化：`ctivities/index.html`、`cash-cow-club/index.html`、`contact-us/index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`kosx-lab/index.html`、`members/index.html`、`partners/index.html`
+- 检查：npm run check；git diff --check；浏览器 4.2s 仍驻留、5.2s 开始淡出、6.3s Hero 完成；1.8s 手动提前进入后 5s 不重复触发；控制台无 error/warning
+- 开工基线：d7a7923985a6e6e4e89f3f1f314d0d67b8513a9f

@@ -18,12 +18,16 @@ sitemap.xml       # 构建生成的正式域名 sitemap
 
 ## 本地预览
 
+最方便的方式是直接双击根目录的 `index.html`。本地文件模式会自动使用 `members/index.html` 等物理页面，并加载粒子动画的 IIFE 兼容包；首页和六个子页面均可直接点击浏览。
+
+如需核对与线上一致的 `/members` 干净路径，可运行：
+
 ```bash
 npm run dev
 # 打开 http://127.0.0.1:8765
 ```
 
-可直接刷新 `/members`、`/activities` 等路径；不再使用 `#/members`。
+两种预览方式都不再使用 `#/members`。直接双击时地址显示 `members/index.html`；GitHub Pages、Vercel 和本地服务器仍使用 `/members`。
 
 ## 修改前必读
 

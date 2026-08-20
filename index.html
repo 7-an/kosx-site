@@ -18,13 +18,19 @@
       const legacyRoute = window.location.hash.replace(/^#\/?/, "");
       if (routes.includes(legacyRoute)) {
         const siteRoot = new URL(".", window.location.href);
-        window.location.replace(new URL(legacyRoute, siteRoot).href);
+        const target = window.location.protocol === "file:" ? `${legacyRoute}/index.html` : legacyRoute;
+        window.location.replace(new URL(target, siteRoot).href);
         return;
       }
       if (document.documentElement.dataset.page === "home") {
         document.documentElement.classList.add("intro-pending");
       }
     })();
+  </script>
+  <script>
+    if (window.location.protocol === "file:" && document.documentElement.dataset.page === "home") {
+      document.write('<script src="assets/vendor/intro-particles.iife.js"><\/script>');
+    }
   </script>
   <style>
     :root {
@@ -1196,6 +1202,7 @@
     let introFinished = false;
     let introStarted = false;
     let revealTimer;
+    let autoRevealTimer;
     let particleMountTimer;
     let particleHandle = null;
     let touchStartY = null;
@@ -1219,6 +1226,7 @@
       if (introFinished) return;
       introFinished = true;
       window.clearTimeout(revealTimer);
+      window.clearTimeout(autoRevealTimer);
       window.clearTimeout(particleMountTimer);
       removeIntroListeners();
       if (particleHandle) {
@@ -1232,6 +1240,7 @@
 
     function beginReveal() {
       if (introFinished || brandIntro.classList.contains("is-revealing")) return;
+      window.clearTimeout(autoRevealTimer);
       brandIntro.classList.add("is-revealing");
       introRoot.classList.add("intro-opening");
       const mobileIntro = window.matchMedia("(max-width: 700px)").matches;
@@ -1278,7 +1287,7 @@
         return;
       }
 
-      // 先让 Logo 单独居中停留一拍，再挂载粒子（粒子飘进来）；之后驻留，等用户下滑
+      // 先让 Logo 单独居中停留一拍，再挂载粒子（粒子飘进来）；短暂驻留后自动进入 Hero
       brandIntro.classList.add("is-playing");
       particleMountTimer = window.setTimeout(() => {
         if (introFinished) return;
@@ -1300,6 +1309,7 @@
       window.addEventListener("touchstart", handleTouchStart, { passive: true });
       window.addEventListener("touchmove", handleTouchMove, { passive: true });
       if (introHint) introHint.addEventListener("click", beginReveal);
+      autoRevealTimer = window.setTimeout(beginReveal, 5000);
       const introImages = Array.from(brandIntro.querySelectorAll("img"));
       const decoded = Promise.allSettled(introImages.map((image) => image.decode ? image.decode() : Promise.resolve()));
       let introFallback;
@@ -1315,6 +1325,15 @@
     }
 
     const currentPage = introRoot.dataset.page || "home";
+    if (window.location.protocol === "file:") {
+      const localPrefix = currentPage === "home" ? "./" : "../";
+      document.querySelectorAll("a[data-route]").forEach((link) => {
+        const targetRoute = link.dataset.route;
+        link.href = targetRoute === "home"
+          ? `${localPrefix}index.html`
+          : `${localPrefix}${targetRoute}/index.html`;
+      });
+    }
     document.querySelectorAll("a[data-route]").forEach((link) => {
       if (link.dataset.route === currentPage) link.setAttribute("aria-current", "page");
       else link.removeAttribute("aria-current");
