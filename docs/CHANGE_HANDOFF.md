@@ -137,3 +137,11 @@
 - 范围内变化：`GENTS.md`、`CHANGELOG.md`、`README.md`、`SOURCE_OF_TRUTH.md`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`package.json`、`scripts/check.mjs`、`activities/`、`cash-cow-club/`、`contact-us/`、`kosx-lab/`、`members/`、`partners/`、`robots.txt`、`scripts/build-routes.mjs`、`sitemap.xml`、`vercel.json`
 - 检查：npm run check；git diff --check；collab:doctor；浏览器逐页刷新 7 路径；旧 /#/members 跳转；390x844 与 1280x800 无横向溢出；子页面不开屏；控制台无 error/warning；临时 HTTP /members 301→/members/ 200 且 Logo 资源 200
 - 开工基线：b54463d8e8866031ee2ba7d2f0ad778dcb5b71f6
+
+## 2026-08-20T10:28:16.972Z · codex · 已将静态多页面迁移提交 c9e6220 推送至 GitHub main，并完成 GitHub Pages 线上验收：首页粒子实际渲染，六个静态深链可刷新，旧 hash 缓存刷新后跳转正常
+
+- 任务：发布静态多页面迁移到 GitHub Pages 并线上验收
+- 认领范围：`*`
+- 范围内变化：未检测到；如有生成物请另行说明
+- 检查：GitHub Pages run 32358940593 success；线上首页 title/canonical/nav/粒子 canvas；六个深链逐页 H1/当前导航/Logo/无溢出；控制台无 error/warning；旧 ?v=c9e6220#/members 跳转 /kosx-site/members/
+- 开工基线：b54463d8e8866031ee2ba7d2f0ad778dcb5b71f6
