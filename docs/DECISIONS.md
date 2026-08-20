@@ -114,3 +114,13 @@
 - 方案：保留横向引导线 + 信号点 + Connect/Create/Collaborate（线条酷感来源），新增竖向橙金扫描边与 `clip-path` 擦除同步的「扫描成标」出场；SLOGAN、入位页首、黑场淡出节奏不变。
 - 参考：obys.agency 细线扫屏、zajno.com / waaark.com 遮罩擦除（2026-08-18 调研：扫线 + 擦除是纯 CSS、PNG 位图 Logo 下成本最低且最贴合的方案）。
 - 备注：`assets/logo/KOS-parent.png` 素材保留备用；合作伙伴页仍有「KOS Solutions」占位卡片，是否保留待与主理人确认。
+
+## 2026-08-20 · hash 路由迁移为真实静态路径
+
+- 来源：用户确认后续部署到 Vercel，并按建议把当前 `#/members` 一类地址迁移为对链接层级和 SEO 更友好的真实路径。
+- 替代：替代 2026-08-12「先架构后排版再特效」阶段采用的单文件 hash 视图切换；保留现有七页信息架构、视觉、内容与首页开屏。
+- 落地：
+  1. 地址改为 `/`、`/members`、`/activities`、`/partners`、`/cash-cow-club`、`/kosx-lab`、`/contact-us`。
+  2. 导航与首页入口使用真实 `<a href>`；旧 hash 地址自动跳转到对应新路径。
+  3. 每个路径输出独立 HTML、title、description、canonical 与唯一 H1；生成 sitemap 和 robots。
+  4. GitHub Pages 继续使用仓库内物理子目录；Vercel 通过 `vercel.json` 直接解析无井号路径。

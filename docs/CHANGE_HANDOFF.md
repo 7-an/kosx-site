@@ -129,3 +129,11 @@
 - 范围内变化：`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`
 - 检查：npm run check 通过；puppeteer 桌面活动区两帧（流动位移）+ 成员页去线截图核对；单文件版重新导出
 - 开工基线：7aadefdb0b135e1ababdc3ef5df24fab454fb377
+
+## 2026-08-20T10:21:54.004Z · codex · 将 7 个 hash 视图迁移为真实静态路径：站内入口改为可抓取链接，生成六个物理子页面、独立 SEO 元数据、sitemap/robots，并加入旧 hash 兼容跳转与 Vercel 映射；保留现有首页、流动模块和粒子开屏
+
+- 任务：将 hash 路由迁移为七个可刷新静态路径并补齐 SEO 基础
+- 认领范围：`*`
+- 范围内变化：`GENTS.md`、`CHANGELOG.md`、`README.md`、`SOURCE_OF_TRUTH.md`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`package.json`、`scripts/check.mjs`、`activities/`、`cash-cow-club/`、`contact-us/`、`kosx-lab/`、`members/`、`partners/`、`robots.txt`、`scripts/build-routes.mjs`、`sitemap.xml`、`vercel.json`
+- 检查：npm run check；git diff --check；collab:doctor；浏览器逐页刷新 7 路径；旧 /#/members 跳转；390x844 与 1280x800 无横向溢出；子页面不开屏；控制台无 error/warning；临时 HTTP /members 301→/members/ 200 且 Logo 资源 200
+- 开工基线：b54463d8e8866031ee2ba7d2f0ad778dcb5b71f6

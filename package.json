@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 8765 --bind 127.0.0.1",
-    "check": "node scripts/check.mjs",
+    "build": "node scripts/build-routes.mjs",
+    "dev": "npm run build && python3 -m http.server 8765 --bind 127.0.0.1",
+    "check": "npm run build && node scripts/check.mjs",
     "collab:status": "node scripts/collab.mjs status",
     "collab:doctor": "node scripts/collab.mjs doctor",
     "collab:claim": "node scripts/collab.mjs claim",

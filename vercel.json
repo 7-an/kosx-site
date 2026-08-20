@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/members", "destination": "/members/index.html" },
+    { "source": "/activities", "destination": "/activities/index.html" },
+    { "source": "/partners", "destination": "/partners/index.html" },
+    { "source": "/cash-cow-club", "destination": "/cash-cow-club/index.html" },
+    { "source": "/kosx-lab", "destination": "/kosx-lab/index.html" },
+    { "source": "/contact-us", "destination": "/contact-us/index.html" }
+  ]
+}

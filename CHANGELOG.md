@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0 · 2026-08-20
+
+- 路由：七个 hash 视图迁移为 `/members` 等真实静态路径；站内入口改为可抓取的 `<a href>`，旧 hash 地址保留兼容跳转。
+- SEO：每页独立 title、description、canonical 与 H1；新增 `sitemap.xml`、`robots.txt`。
+- 部署：新增静态页面生成脚本和 Vercel 路由配置；GitHub Pages 可直接使用物理子目录。
+
 ## 0.3.0 · 2026-08-19
 
 - 开屏 V3：纯黑底 + voidtype 粒子聚合成「BUILD SOMETHING REAL.」（三行下行阶梯错位）；KOSX Logo 居中独奏后飞入页首；粒子定型后驻留静止，底部双箭头脉动指引，滚动/上滑/键盘进入首页；无 Skip 按钮、无网格、无光晕曙光、无 3C。

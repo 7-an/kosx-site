@@ -33,7 +33,7 @@
 - 网站定位：KOSX 组织官网，推翻旧站重做，不是旧站的改版。
 - 信息架构：首页 + 成员、活动、合作伙伴、搞钱研究所、KOSX Lab、联系我们，共 7 个视图。
 - 视觉：深色 VI 主题（近黑底 + 橙金 signal），来自《KOSX.ai VI物料效果册》。
-- 开屏：KOS parent logo 过渡到 KOSX logo 的品牌动画，橙金光效、柔和淡出；尊重 `prefers-reduced-motion`。
+- 开屏：仅首页播放纯黑粒子版 KOSX 品牌动画；Logo 独奏后飞入页首，粒子聚合 Slogan，并尊重 `prefers-reduced-motion`。
 - 首页气质：大厂式紧凑——首屏克制，内容丰富度放在子页面。
 - 正式文案、活动照片、X 抓取数据缺失时保持空状态，不虚构内容、不伪造数据。
 - 成员信息已确认可公开展示。
@@ -41,8 +41,9 @@
 
 ## 工程规则
 
-- 单文件静态站：`index.html` + `assets/`，无构建、无框架、无依赖安装。
+- 多页面静态站：`index.html` 是首页与六个子页面内容模板的真源，`npm run build` 生成六个静态子目录；无框架、无依赖安装。
+- `members/`、`activities/`、`partners/`、`cash-cow-club/`、`kosx-lab/`、`contact-us/` 是构建产物，不手改；内容和样式统一修改 `index.html` 后重新构建。
 - 不增加后端、数据库、登录、CMS、分析追踪、第三方 JS 库，除非用户另行明确批准。唯一豁免：开屏粒子模块 `assets/vendor/intro-particles.js`（vendored Three.js + VOIDTYPE 移植，2026-08-19 用户批准，许可见 `THIRD_PARTY_NOTICES.md`），经动态 `import()` 加载，失败必须可降级为静态开屏。
-- 路由为 hash 视图切换，新增页面必须同时注册 `data-view`、`data-route` 和 `routes` 数组。
+- 路由使用真实静态路径与 `<a href>`；禁止恢复 `#/members` 一类 hash 路由。新增一级页面必须登记到 `scripts/build-routes.mjs`、`scripts/check.mjs`、sitemap 与规格文档。
 - 图片只用 `assets/` 内本地文件；新增素材先确认版权来源。
 - 每次修改后运行 `npm run check`，并用 `collab:done` 写回交接。

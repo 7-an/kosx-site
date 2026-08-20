@@ -4,27 +4,29 @@
 
 ## 定位
 
-KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前为单文件静态原型：信息架构、排版、VI 深色主题与开屏动画已确认；各页面正式文案与真实数据待客户补充。
+KOSX 组织官网（`kosx.ai`）的静态多页面原型。推翻旧站重做，信息架构、排版、VI 深色主题与开屏动画已确认；各页面正式文案与真实数据待客户补充。
 
 ## 技术形态
 
-- 单文件 `index.html` + `assets/logo/` 本地素材，无构建、无框架、无第三方库。
-- hash 路由：视图间切换不刷新页面；`routes` 数组是路由真源。
-- 本地预览：`npm run dev`（`http://127.0.0.1:8765`）。
+- `index.html` + `assets/` 为内容、样式、交互和素材真源；无框架、无依赖安装。`npm run build` 生成六个子页面目录、`sitemap.xml` 与 `robots.txt`。
+- 真实静态路径：导航使用可抓取的 `<a href>`；页面刷新时直接返回对应 HTML，不依赖 JavaScript 状态或 hash。
+- 每个路径必须有独立 `title`、`meta description`、canonical 与唯一 H1；正式域名 canonical 为 `https://kosx.ai`。
+- 旧 `#/members` 等地址只保留一次性兼容跳转，不再作为站内链接生成。
+- 本地预览：`npm run dev`（先构建，再访问 `http://127.0.0.1:8765`）。
 
 ## 信息架构（7 个视图）
 
 | 路由 | 名称 | 内容要点 |
 |---|---|---|
-| `home` | 首页 | Hero（定位语 + CTA）→ 合作伙伴信任带（流动、无编号）→ 01 我们是谁（大标题 + Mission/Vision）→ 02 我们如何创造价值（三个主入口：社群与内容/项目与交付/人与网络）→ 03 Insights from X → 04 最新活动（自动流动卡片，内容槽留空）|
-| `members` | 成员 | Core Team、Mentors、Builders；信息可公开，真实数据待补 |
-| `activities` | 活动 | 线上、线下、Something New、VersionX；照片与详情后续上传 |
-| `partners` | 合作伙伴 | 合作方展示 |
-| `cash-cow-club` | 搞钱研究所 | 内容更新、周报与对外输出；旗下 AI Workshop、灵感市集 |
-| `kosx-lab` | KOSX Lab | 将想法推进为真实项目 |
-| `contact-us` | 联系我们 | 加入/合作表单与联系方式 |
+| `/` | 首页 | Hero（定位语 + CTA）→ 合作伙伴信任带（流动、无编号）→ 01 我们是谁（大标题 + Mission/Vision）→ 02 我们如何创造价值（三个主入口：社群与内容/项目与交付/人与网络）→ 03 Insights from X → 04 最新活动（自动流动卡片，内容槽留空）|
+| `/members` | 成员 | Core Team、Mentors、Builders；信息可公开，真实数据待补 |
+| `/activities` | 活动 | 线上、线下、Something New、VersionX；照片与详情后续上传 |
+| `/partners` | 合作伙伴 | 合作方展示 |
+| `/cash-cow-club` | 搞钱研究所 | 内容更新、周报与对外输出；旗下 AI Workshop、灵感市集 |
+| `/kosx-lab` | KOSX Lab | 将想法推进为真实项目 |
+| `/contact-us` | 联系我们 | 加入/合作表单与联系方式 |
 
-规则：新增视图必须同时注册 `data-view`、`data-route` 导航和 `routes` 数组；`npm run check` 会校验一一对应。
+规则：新增一级页面必须同时登记 `data-view`、`data-route` 导航、构建页配置、检查页配置和 sitemap；`npm run check` 会逐页校验。
 
 ## 视觉合同
 
@@ -42,7 +44,7 @@ KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前
 - 画面元素只有纯黑底 + 粒子 + Logo：无网格、无光晕、无曙光（2026-08-19 用户决定），无 Connect/Create/Collaborate（首页底部与页脚已有，不进开屏）。
 - 粒子：VOIDTYPE 移植模块（Three.js vendored，见 `THIRD_PARTY_NOTICES.md`），白色颗粒、纯黑底。
 - 降级：WebGL 不可用或模块加载失败 → 静态 Logo + SLOGAN 短停；`prefers-reduced-motion` 直接静态版。
-- 只在进入首页时播放，视图内路由切换不重播；无 Skip 按钮，双箭头、下滑手势与键盘进入。
+- 只在进入首页时播放；六个子路径直接显示内容，不播放开屏。无 Skip 按钮，双箭头、下滑手势与键盘进入。
 
 ## 响应式与可访问性
 
@@ -58,4 +60,4 @@ KOSX 组织官网（`kosx.ai`）的本地预览版。推翻旧站重做，当前
 
 - X（Twitter）内容自动抓取。
 - 活动相册与详情页。
-- 正式部署与 SEO 提审（sitemap/结构化数据）。
+- 正式文案完成后的结构化数据与 SEO 提审。
