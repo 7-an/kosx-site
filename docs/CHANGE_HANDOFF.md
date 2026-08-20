@@ -153,3 +153,11 @@
 - 范围内变化：`ctivities/index.html`、`cash-cow-club/index.html`、`contact-us/index.html`、`docs/DECISIONS.md`、`docs/V1_SPEC.md`、`index.html`、`kosx-lab/index.html`、`members/index.html`、`partners/index.html`
 - 检查：npm run check；git diff --check；浏览器 4.2s 仍驻留、5.2s 开始淡出、6.3s Hero 完成；1.8s 手动提前进入后 5s 不重复触发；控制台无 error/warning
 - 开工基线：d7a7923985a6e6e4e89f3f1f314d0d67b8513a9f
+
+## 2026-08-20T10:46:52.338Z · codex · 首页增加 5 秒自动进入 Hero；支持直接双击 index.html 时加载粒子兼容包并跳转物理子页面；线上继续保留无井号干净路径，已发布 GitHub Pages
+
+- 任务：本地 file 预览兼容与 GitHub Pages 发布
+- 认领范围：`index.html`、`assets/vendor/intro-particles.iife.js`、`scripts/check.mjs`、`README.md`、`AGENTS.md`、`THIRD_PARTY_NOTICES.md`、`docs`、`activities/index.html`、`cash-cow-club/index.html`、`contact-us/index.html`、`kosx-lab/index.html`、`members/index.html`、`partners/index.html`
+- 范围内变化：未检测到；如有生成物请另行说明
+- 检查：npm run check；git diff --check；collab:doctor；本地 HTTP 首页粒子与 5 秒自动进入；成员深链；GitHub Pages run 32360452440 success；线上首页粒子、5 秒进入与 /members/ 深链
+- 开工基线：d7a7923985a6e6e4e89f3f1f314d0d67b8513a9f
