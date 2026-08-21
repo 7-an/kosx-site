@@ -14,6 +14,10 @@
   <title>KOSX.ai｜把事情做成的创造者网络</title>
   <script>
     (() => {
+      // 刷新后一律回到页面顶部（Hero），不恢复上次的滚动位置
+      if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+      window.scrollTo(0, 0);
+
       const routes = ["members", "activities", "partners", "cash-cow-club", "kosx-lab", "contact-us"];
       const legacyRoute = window.location.hash.replace(/^#\/?/, "");
       if (routes.includes(legacyRoute)) {
@@ -22,7 +26,17 @@
         window.location.replace(new URL(target, siteRoot).href);
         return;
       }
-      if (document.documentElement.dataset.page === "home") {
+      // 任何页面刷新（reload）都直接回首页 Hero：开屏随首页重播
+      const isHome = document.documentElement.dataset.page === "home";
+      const navEntry = performance.getEntriesByType("navigation")[0];
+      const isReload = Boolean(navEntry) && navEntry.type === "reload";
+      if (isReload && !isHome) {
+        const siteRoot = new URL(".", window.location.href);
+        const target = window.location.protocol === "file:" ? "../index.html" : "../";
+        window.location.replace(new URL(target, siteRoot).href);
+        return;
+      }
+      if (isHome) {
         document.documentElement.classList.add("intro-pending");
       }
     })();
@@ -180,11 +194,11 @@
     .brand-intro.is-reduced .intro-hint-arrow { animation: none; opacity: 1; }
 
     html.intro-pending .site-header,
-    html.intro-pending .hero h1,
-    html.intro-pending .hero-bottom { opacity: 0; }
+    html.intro-pending .hero-center,
+    html.intro-pending .lang-toggle { opacity: 0; }
     html.intro-opening .site-header { animation: introPageIn .46s .35s ease-out forwards; }
-    html.intro-opening .hero h1 { animation: introHeroIn .56s .4s cubic-bezier(.22, 1, .36, 1) forwards; }
-    html.intro-opening .hero-bottom { animation: introPageIn .44s .5s ease-out forwards; }
+    html.intro-opening .hero-center { animation: introHeroIn .56s .4s cubic-bezier(.22, 1, .36, 1) forwards; }
+    html.intro-opening .lang-toggle { animation: introPageIn .44s .5s ease-out forwards; }
 
     @keyframes introChildIn {
       from { opacity: 0; transform: translate(-50%, -50%) scale(.96); }
@@ -320,40 +334,67 @@
     .accent { color: var(--signal); }
 
     .hero {
-      min-height: min(610px, calc(68vh - 64px));
+      position: relative;
+      height: 620px;
       display: grid;
-      grid-template-rows: 1fr auto;
+      place-items: center;
       padding: var(--pad);
-      background-image:
-        radial-gradient(circle at 88% 28%, rgba(255, 106, 0, .16), transparent 22%);
+      text-align: center;
     }
-    .hero-main {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 100px;
-      align-items: end;
-      gap: 40px;
-      padding: clamp(40px, 6vh, 66px) 0 30px;
+    .lang-toggle {
+      position: absolute;
+      top: 22px;
+      right: var(--pad);
+      display: flex;
+      align-items: baseline;
+      gap: 7px;
+      font-size: 12px;
     }
+    .lang-option {
+      padding: 4px 2px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 12px;
+      letter-spacing: .04em;
+      transition: color .18s ease, box-shadow .18s ease;
+    }
+    .lang-option:hover { color: var(--ink); }
+    .lang-option.is-active { color: var(--ink); box-shadow: inset 0 -1px 0 var(--ink); }
+    .lang-divider { color: rgba(255, 255, 255, .3); }
+    .hero-center { max-width: 920px; text-align: center; }
+    .hero-text { display: inline-block; text-align: center; }
     .hero h1 {
-      max-width: 1080px;
-      margin: 16px 0 0;
+      margin: 0;
       font-family: var(--display);
-      font-size: clamp(42px, 5.25vw, 78px);
+      font-size: clamp(40px, 4.6vw, 72px);
       font-weight: 500;
-      line-height: 1.02;
+      line-height: 1.06;
       letter-spacing: -.03em;
     }
-    .hero h1 span { display: block; }
-    .hero-mark { align-self: start; justify-self: end; width: 76px; }
-    .hero-mark img { width: 100%; }
-    .hero-bottom {
-      display: grid;
-      grid-template-columns: 1.35fr 1fr auto;
-      gap: 22px;
-      align-items: end;
-      padding: 16px 0 2px;
+    .hero-sub {
+      margin: 22px auto 0;
+      max-width: 560px;
+      color: var(--muted);
+      font-size: clamp(15px, 1.2vw, 18px);
     }
-    .hero-bottom p { margin: 0; max-width: 590px; font-size: clamp(14px, 1vw, 16px); }
+    .hero-explore {
+      margin-top: 34px;
+      min-width: 190px;
+      padding: 13px 30px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--white);
+      color: var(--black);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .02em;
+      transition: background-color .18s ease, transform .18s ease;
+    }
+    .hero-explore:hover,
+    .hero-explore:focus-visible { background: #e8e8e6; transform: translateY(-1px); outline: 0; }
     .button-row { display: flex; flex-wrap: wrap; gap: 8px; }
     .button {
       display: inline-flex;
@@ -377,7 +418,7 @@
     .button:hover { transform: translateY(-1px); }
 
     .section {
-      padding: clamp(52px, 7vw, 104px) var(--pad);
+      padding: clamp(72px, 9vw, 128px) var(--pad);
     }
     .section-head {
       display: grid;
@@ -413,43 +454,67 @@
     }
     .page-intro p { margin: 0; max-width: 680px; }
 
-    .hero-trust {
+    .partner-marquee { cursor: pointer; }
+
+    .home-actions {
+      padding: clamp(90px, 13vh, 140px) var(--pad) clamp(100px, 14vh, 150px);
+      text-align: center;
+    }
+    .home-actions-title {
+      max-width: 780px;
+      margin: 0 auto;
+      font-size: clamp(20px, 2.2vw, 30px);
+      font-weight: 500;
+      line-height: 1.55;
+      letter-spacing: -.01em;
+    }
+    .home-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      max-width: 1320px;
+      margin: clamp(70px, 10vh, 120px) auto 0;
+    }
+    .action-card {
+      position: relative;
       display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      min-height: clamp(300px, 30vw, 430px);
+      padding-bottom: clamp(56px, 9vw, 96px);
+      border-radius: 20px;
+      background: var(--soft-surface);
+      transition: background-color .2s ease, transform .2s ease;
+    }
+    .action-card:hover,
+    .action-card:focus-visible { background: var(--surface); transform: translateY(-2px); outline: 0; }
+    .action-card-btn {
+      display: inline-flex;
       align-items: center;
-      gap: 28px;
-      padding: 15px var(--pad) 26px;
+      justify-content: center;
+      min-width: 172px;
+      padding: 13px 30px;
+      border-radius: 999px;
+      background: var(--white);
+      color: var(--black);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .02em;
     }
-    .hero-trust-label {
-      flex: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 10px;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    .hero-trust-label::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--signal);
-    }
-    .hero-trust-marquee { flex: 1; min-width: 0; padding: 0; border-top: 0; cursor: pointer; }
+    .home-brand-slot { min-height: 60vh; }
 
     .home-about {
-      padding: clamp(28px, 4vw, 48px) var(--pad) 30px;
+      padding: clamp(56px, 7vw, 88px) var(--pad) clamp(72px, 9vw, 110px);
     }
     .home-about h2 {
       max-width: 900px;
-      margin: 14px 0 0;
+      margin: 14px auto 0;
       font-family: var(--display);
       font-size: clamp(32px, 3.6vw, 54px);
       font-weight: 500;
       line-height: 1.05;
       letter-spacing: -.025em;
+      text-align: center;
     }
     .home-about-lead {
       max-width: 720px;
@@ -457,6 +522,38 @@
       font-size: clamp(17px, 1.5vw, 22px);
     }
     .home-about-copy { max-width: 600px; margin: 14px 0 0; color: var(--muted); }
+    .about-proof { display: flex; align-items: center; justify-content: center; gap: 16px; margin-top: clamp(28px, 4vh, 44px); }
+    .about-avatars { display: flex; }
+    .about-avatar {
+      width: 36px;
+      height: 36px;
+      margin-left: -10px;
+      border: 2px solid var(--paper);
+      border-radius: 50%;
+      background: var(--surface);
+    }
+    .about-avatar:first-child { margin-left: 0; }
+    .about-builtby { margin: 0; color: var(--muted); font-size: 14px; }
+    .about-partners { display: block; margin-top: clamp(30px, 4.5vh, 48px); }
+    .about-bento {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: clamp(56px, 8vh, 96px);
+    }
+    .bento-featured { display: grid; align-content: start; gap: 8px; padding: 22px; border-radius: 12px; background: var(--soft-surface); }
+    .bento-featured .eyebrow { display: block; margin-bottom: 8px; }
+    .bento-row { display: grid; grid-template-columns: 64px 1fr auto; gap: 14px; align-items: center; padding: 10px 0; }
+    .bento-thumb { display: block; width: 64px; aspect-ratio: 16 / 10; border-radius: 8px; background: var(--surface); }
+    .bento-cat { margin: 0; color: var(--muted); font-size: 11px; }
+    .bento-title { min-height: 20px; margin: 4px 0 0; font-size: 15px; font-weight: 500; }
+    .bento-photo { position: relative; min-height: 240px; overflow: hidden; border-radius: 12px; background: var(--soft-surface); }
+    .bento-photo-media { position: absolute; inset: 0; background: var(--surface); }
+    .bento-photo-tag { position: absolute; left: 14px; bottom: 12px; z-index: 1; color: var(--muted); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+    .bento-channels { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .bento-channel { display: flex; flex-direction: column; gap: 10px; min-height: 86px; padding: 18px; border-radius: 12px; background: var(--soft-surface); }
+    .bento-channel strong { font-size: 14px; font-weight: 500; }
+    .about-events { margin-top: clamp(56px, 8vh, 88px); }
     .home-about .home-principles { margin-top: 30px; }
     .home-principles { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; }
     .home-principle { padding: 14px 14px 0 0; }
@@ -464,72 +561,54 @@
     .home-principle strong { display: block; margin-top: 8px; font-size: 15px; font-weight: 500; }
 
     .home-directory-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 24px;
-      padding: 28px var(--pad) 20px;
+      padding: clamp(56px, 7vw, 88px) var(--pad) clamp(28px, 4vw, 44px);
+      text-align: center;
     }
     .home-directory-head h2 {
-      margin: 0;
+      margin: 0 auto;
       font-family: var(--display);
-      font-size: clamp(28px, 3vw, 42px);
+      font-size: clamp(32px, 3.6vw, 54px);
       font-weight: 500;
-      letter-spacing: -.02em;
+      line-height: 1.05;
+      letter-spacing: -.025em;
     }
-    .home-directory-head p { margin: 0; color: var(--muted); font-size: 13px; }
-    .home-directory {
+    .works-bento {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      padding: 0 var(--pad) clamp(40px, 5vw, 64px);
+      grid-template-rows: 1.6fr 1fr;
+      gap: 16px;
+      padding: 0 var(--pad) clamp(72px, 9vw, 110px);
     }
-    .home-entry {
-      min-height: 142px;
+    .works-cell-tall { grid-row: span 2; }
+    .works-cell {
       display: flex;
       flex-direction: column;
-      align-items: stretch;
-      justify-content: space-between;
-      gap: 18px;
-      padding: 17px 18px;
-      border-radius: 16px;
+      gap: 16px;
+      padding: 18px;
+      border-radius: 12px;
       background: var(--soft-surface);
-      cursor: pointer;
-      text-align: left;
-      transition: background-color .18s ease, color .18s ease, transform .18s ease;
+      transition: background-color .18s ease, transform .18s ease;
     }
-    .home-entry:hover,
-    .home-entry:focus-visible { background: var(--surface); color: var(--ink); outline: 0; transform: translateY(-2px); }
-    .home-entry-top { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .home-entry-copy { display: block; }
-    .home-entry-title { display: block; font-size: clamp(18px, 1.5vw, 23px); font-weight: 500; letter-spacing: -.025em; }
-    .home-entry-description { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; line-height: 1.4; }
-    .home-entry:hover .home-entry-description,
-    .home-entry:focus-visible .home-entry-description,
-    .home-entry:hover .index-no,
-    .home-entry:focus-visible .index-no { color: var(--muted); }
+    .works-cell:hover,
+    .works-cell:focus-visible { background: var(--surface); transform: translateY(-2px); outline: 0; }
+    .works-visual { flex: 1; min-height: 110px; border-radius: 9px; background: var(--surface); }
+    .works-cell-text { display: block; }
+    .works-cell-title { display: block; font-size: clamp(19px, 1.6vw, 24px); font-weight: 500; letter-spacing: -.02em; }
+    .works-cell-desc { display: block; margin-top: 6px; color: var(--muted); font-size: 12px; }
+    .works-cell-cta {
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      min-height: 0;
+      background: var(--signal);
+      color: var(--white);
+    }
+    .works-cell-cta:hover,
+    .works-cell-cta:focus-visible { background: #ff7d1f; color: var(--white); }
+    .works-cta-icon { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, .22); font-size: 16px; }
+    .works-cta-text { font-family: var(--display); font-size: clamp(22px, 1.9vw, 28px); font-weight: 500; line-height: 1.08; letter-spacing: -.02em; }
     .home-entry-arrow { font-size: 15px; }
 
-    .home-insights-section,
-    .home-latest {
-      padding: clamp(40px, 5vw, 64px) var(--pad);
-    }
-    .home-feature-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 24px;
-      margin-bottom: 22px;
-    }
-    .home-feature-head h2 {
-      margin: 7px 0 0;
-      font-family: var(--display);
-      font-size: clamp(28px, 3vw, 42px);
-      font-weight: 500;
-      line-height: 1;
-      letter-spacing: -.02em;
-    }
-    .home-feature-head p { max-width: 520px; margin: 0; color: var(--muted); font-size: 13px; }
     .partner-marquee {
       overflow: hidden;
       padding: 20px 0 8px;
@@ -563,26 +642,6 @@
       .partner-marquee-track { animation: none; flex-wrap: wrap; width: auto; }
       .partner-marquee-group { flex-wrap: wrap; padding-right: 0; }
     }
-    .home-insights {
-      min-height: 286px;
-      display: grid;
-      grid-template-columns: minmax(250px, .72fr) 2fr;
-      overflow: hidden;
-      border-radius: 20px;
-      background-color: #050505;
-      background-image:
-        radial-gradient(circle at 96% 116%, rgba(255, 106, 0, .5), transparent 28%);
-      color: var(--white);
-    }
-    .home-insights-intro { display: flex; flex-direction: column; justify-content: space-between; padding: 28px; }
-    .home-insights-intro h2 { margin: 12px 0 0; font-size: clamp(32px, 3.4vw, 52px); font-weight: 500; line-height: .95; letter-spacing: -.04em; }
-    .home-insights-intro p { margin: 0; color: #bdbdbd; font-size: 12px; }
-    .home-insights-feed { display: grid; align-content: stretch; border-left: 1px solid #26262a; }
-    .home-insight-row { display: grid; grid-template-columns: 90px 1fr auto; gap: 20px; align-items: center; padding: 22px 24px; border-bottom: 1px solid #26262a; }
-    .home-insight-row:last-child { border-bottom: 0; }
-    .home-insight-row .meta { color: #8f8f8f; }
-    .home-insight-row p { margin: 0; color: #d0d0d0; }
-    .home-insight-row .home-entry-arrow { color: var(--signal); }
     .event-marquee {
       overflow: hidden;
       mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
@@ -719,18 +778,62 @@
     .submit { margin-top: 34px; border-color: var(--signal); background: var(--signal); color: var(--black); }
 
     .site-footer {
-      display: grid;
-      grid-template-columns: 1.4fr repeat(2, 1fr);
-      gap: 50px;
-      padding: 60px var(--pad) 30px;
+      position: relative;
+      overflow: hidden;
+      padding: clamp(56px, 8vw, 90px) var(--pad) 34px;
       background: #050505;
       color: var(--white);
     }
-    .footer-logo { width: min(320px, 90%); }
+    .site-footer::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 78%;
+      background: radial-gradient(ellipse 105% 95% at 50% 115%, rgba(255, 122, 26, .5), rgba(255, 61, 0, .2) 45%, transparent 72%);
+      pointer-events: none;
+    }
+    .footer-main {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: 40px;
+      min-height: clamp(280px, 30vw, 440px);
+    }
+    .footer-wordmark {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .footer-wordmark .wordmark-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+    .footer-wordmark-static {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      font-family: var(--display);
+      font-size: clamp(96px, 15vw, 230px);
+      font-weight: 600;
+      line-height: .9;
+      letter-spacing: -.04em;
+    }
+    .site-footer.is-live .footer-wordmark-static { visibility: hidden; }
+    .footer-links {
+      grid-column: 2;
+      justify-self: end;
+      width: min(560px, 100%);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px 24px;
+      align-content: start;
+      padding-top: 12px;
+    }
     .footer-nav { display: grid; gap: 9px; align-content: start; font-size: 13px; }
     .footer-nav a { width: fit-content; padding: 0; color: inherit; text-align: left; }
     .footer-nav a:hover { color: var(--signal); }
-    .footer-bottom { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 25px; margin-top: 40px; padding-top: 18px; color: #aaaaaa; font-size: 11px; }
+    .footer-slogan { grid-column: 1 / -1; margin: 12px 0 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .footer-bottom { position: relative; z-index: 1; grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 25px; margin-top: 48px; padding-top: 18px; color: #aaaaaa; font-size: 11px; }
 
     @media (max-width: 1050px) {
       .site-header { grid-template-columns: 145px minmax(0, 1fr) auto; }
@@ -738,11 +841,7 @@
       .brand img { width: 110px; }
       .nav-link { padding: 0 11px; }
       .contact-link { padding: 0 16px; }
-      .hero { min-height: auto; }
-      .hero-main { grid-template-columns: 1fr 76px; padding-top: 46px; }
-      .hero-bottom { grid-template-columns: 1fr; }
-      .home-directory { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .home-insights { grid-template-columns: minmax(220px, .8fr) 2fr; }
+      .hero { height: auto; min-height: 560px; }
       .section-head, .page-hero { grid-template-columns: 150px 1fr; }
       .grid.four, .people-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .grid.three { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -754,27 +853,27 @@
       .main-nav { grid-column: 1 / -1; order: 3; display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; overflow: visible; padding: 7px var(--pad) 11px; }
       .nav-link { min-height: 38px; margin: 0; background: var(--soft-surface); }
       .contact-link { min-height: 36px; }
-      .hero-main { grid-template-columns: 1fr; padding-top: 42px; }
-      .hero-mark { justify-self: start; width: 56px; order: -1; }
-      .hero h1 { font-size: clamp(38px, 11vw, 54px); }
-      .hero-trust { flex-wrap: wrap; gap: 10px 16px; padding: 14px var(--pad); }
-      .hero-trust-label { flex: 1; }
-      .hero-trust-marquee { order: 3; flex-basis: 100%; }
-      .hero-trust-marquee .partner-marquee-track { animation: none; flex-wrap: wrap; row-gap: 12px; width: auto; }
-      .hero-trust-marquee .partner-marquee-group { flex-wrap: wrap; row-gap: 12px; padding-right: 0; }
-      .hero-trust-marquee .partner-marquee-group[aria-hidden="true"] { display: none; }
-      .home-about { padding: 24px var(--pad) 22px; }
-      .home-directory-head { align-items: start; flex-direction: column; padding-block: 24px 16px; }
-      .home-directory { gap: 10px; padding-bottom: 24px; }
-      .home-entry { min-height: 126px; padding: 15px; }
-      .home-entry-title { font-size: 18px; }
-      .home-entry-description { display: none; }
-      .home-insights-section, .home-latest { padding-block: 24px; }
-      .home-feature-head { align-items: start; flex-direction: column; margin-bottom: 18px; }
-      .home-insights { min-height: 0; grid-template-columns: 1fr; }
-      .home-insights-intro { min-height: 200px; padding: 24px; }
-      .home-insights-feed { border-left: 0; border-top: 1px solid #26262a; }
-      .home-insight-row { grid-template-columns: 70px 1fr auto; gap: 12px; padding: 18px; }
+      .hero h1 { font-size: clamp(34px, 9.5vw, 46px); }
+      .lang-toggle { top: 14px; }
+      .partner-marquee .partner-marquee-track { animation: none; flex-wrap: wrap; row-gap: 12px; width: auto; }
+      .partner-marquee .partner-marquee-group { flex-wrap: wrap; row-gap: 12px; padding-right: 0; }
+      .partner-marquee .partner-marquee-group[aria-hidden="true"] { display: none; }
+      .home-about { padding: 44px var(--pad) 56px; }
+      .about-proof { flex-wrap: wrap; }
+      .about-bento { grid-template-columns: 1fr; margin-top: 44px; }
+      .bento-photo { min-height: 200px; }
+      .bento-channels { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .about-events { margin-top: 44px; }
+      .home-actions { padding: 64px var(--pad) 72px; }
+      .home-actions-title br { display: none; }
+      .home-actions-grid { grid-template-columns: 1fr; margin-top: 44px; }
+      .action-card { min-height: 240px; padding-bottom: 48px; }
+      .home-brand-slot { min-height: 40vh; }
+      .home-directory-head { padding-block: 44px 20px; }
+      .works-bento { grid-template-columns: 1fr; grid-template-rows: auto; gap: 12px; padding-bottom: 56px; }
+      .works-cell-tall { grid-row: auto; }
+      .works-cell { min-height: 200px; }
+      .works-cell-cta { min-height: 0; }
       .intro-child { top: 50%; width: min(210px, 56vw); }
       .intro-fallback { top: 60%; font-size: 12px; }
       .intro-hint { bottom: 14px; }
@@ -790,8 +889,8 @@
       }
       .brand-intro.is-revealing { animation: introReveal .3s .25s cubic-bezier(.65, 0, .35, 1) forwards; }
       html.intro-opening .site-header { animation: introPageIn .3s .28s ease-out forwards; }
-      html.intro-opening .hero h1 { animation: introHeroIn .34s .3s cubic-bezier(.22, 1, .36, 1) forwards; }
-      html.intro-opening .hero-bottom { animation: introPageIn .28s .4s ease-out forwards; }
+      html.intro-opening .hero-center { animation: introHeroIn .34s .3s cubic-bezier(.22, 1, .36, 1) forwards; }
+      html.intro-opening .lang-toggle { animation: introPageIn .28s .4s ease-out forwards; }
       @keyframes introChildDockMobile {
         from { left: 50%; top: 50%; width: min(210px, 56vw); transform: translate(-50%, -50%); }
         to { left: var(--pad); top: 15px; width: 110px; transform: translate(0, 0); }
@@ -803,7 +902,10 @@
       .page-intro, .form-grid, .ticker-block { grid-template-columns: 1fr; }
       .grid.two, .grid.three, .grid.four, .people-grid { grid-template-columns: 1fr; }
       .card.wide { grid-column: span 1; }
-      .site-footer { grid-template-columns: 1fr; }
+      .site-footer { padding-top: 56px; }
+      .footer-main { grid-template-columns: 1fr; gap: 28px; }
+      .footer-links { grid-column: auto; justify-self: stretch; width: auto; }
+      .footer-wordmark-static { font-size: clamp(84px, 24vw, 130px); }
       .footer-bottom { grid-column: 1; flex-direction: column; }
     }
 
@@ -856,26 +958,43 @@
     <section class="view is-active" data-view="home" aria-labelledby="home-title">
       <div class="page-shell">
         <section class="hero">
-          <div class="hero-main">
-            <div>
-              <div class="kicker">Creator Network · Project Collective</div>
-              <h1 id="home-title"><span>将 AI 时代的创造者</span><span>组织成真正能够</span><span>把事情做成的网络<span class="accent">.</span></span></h1>
-            </div>
-            <div class="hero-mark"><img src="assets/logo/KOSX ICON White.png" alt=""></div>
+          <div class="lang-toggle" role="group" aria-label="语言切换">
+            <button class="lang-option" type="button" data-lang="zh" aria-pressed="false">中文</button><span class="lang-divider" aria-hidden="true">/</span><button class="lang-option is-active" type="button" data-lang="en" aria-pressed="true">EN</button>
           </div>
-          <div class="hero-bottom">
-            <p>通过社群发现人才，以真实项目组织协作，让创造的成果进入真实商业场景。</p>
-            <p class="meta">CONNECT · CREATE · COLLABORATE<br>BUILD SOMETHING REAL</p>
-            <div class="button-row">
-              <a class="button primary nav-trigger" href="./kosx-lab" data-route="kosx-lab">探索项目</a>
-              <a class="button nav-trigger" href="./contact-us" data-route="contact-us">加入 KOSX</a>
+          <div class="hero-center">
+            <div class="hero-text">
+              <h1 id="home-title" data-lang-zh="将 AI 时代的创造者，组织成真正能够把事情做成的网络." data-lang-en="Where Wellness<br>Meets Innovation.">Where Wellness<br>Meets Innovation.</h1>
+              <p class="hero-sub" data-lang-zh="通过社群发现人才，以真实项目组织协作，让创造的成果进入真实商业场景。" data-lang-en="Bringing people together to build a real world.">Bringing people together to build a real world.</p>
             </div>
+            <div><button class="hero-explore" id="hero-explore" type="button" data-lang-zh="探索" data-lang-en="Explore">Explore</button></div>
           </div>
         </section>
 
-        <div class="hero-trust" aria-label="合作伙伴，循环滚动展示，悬停暂停，点击进入合作伙伴页">
-          <span class="hero-trust-label">Trusted by / Building with</span>
-          <a class="partner-marquee hero-trust-marquee nav-trigger" href="./partners" data-route="partners">
+        <section class="home-actions" aria-labelledby="home-actions-title">
+          <h2 class="home-actions-title" id="home-actions-title" data-i18n-en='We discover talent through community, collaborate on real projects,<br>and turn creations into real business.'>通过社群发现人才，以真实项目组织协作，<br>让创造的成果进入真实商业场景。</h2>
+          <div class="home-actions-grid">
+            <a class="action-card nav-trigger" href="./kosx-lab" data-route="kosx-lab" aria-label="探索项目，进入 KOSX Lab">
+              <span class="action-card-btn">探索项目</span>
+            </a>
+            <a class="action-card nav-trigger" href="./contact-us" data-route="contact-us" aria-label="加入团队，进入联系我们">
+              <span class="action-card-btn">加入团队</span>
+            </a>
+          </div>
+        </section>
+
+        <section class="home-brand-slot" aria-label="品牌素材预留区域">
+          <!-- 预留给品牌素材（设计师 2026-08-21 决定：暂时留空） -->
+        </section>
+
+        <section class="home-about" aria-labelledby="home-about-title">
+          <h2 id="home-about-title" data-i18n-en='Who We Are<span class="accent">.</span>'>我们是谁<span class="accent">.</span></h2>
+          <div class="about-proof">
+            <div class="about-avatars" aria-label="活跃群友头像预留位">
+              <span class="about-avatar"></span><span class="about-avatar"></span><span class="about-avatar"></span><span class="about-avatar"></span><span class="about-avatar"></span><span class="about-avatar"></span><span class="about-avatar"></span><span class="about-avatar"></span>
+            </div>
+            <p class="about-builtby">Built by 这些人</p>
+          </div>
+          <a class="partner-marquee about-partners nav-trigger" href="./partners" data-route="partners" aria-label="合作伙伴，循环滚动展示，悬停暂停，点击进入合作伙伴页">
             <div class="partner-marquee-track">
               <div class="partner-marquee-group">
                 <span class="partner-marquee-item"><span>Vendor / Supplier</span><strong>DingTalk</strong></span>
@@ -895,49 +1014,29 @@
               </div>
             </div>
           </a>
-        </div>
-
-        <section class="home-about" aria-labelledby="home-about-title">
-          <div class="section-label">01 / About KOSX</div>
-          <h2 id="home-about-title">我们是谁<span class="accent">.</span></h2>
-          <p class="home-about-lead">不是 AI 产品公司，而是创造者网络<span class="accent">.</span></p>
+          <p class="home-about-lead" data-i18n-en='Not an AI product company — a creator network<span class="accent">.</span>'>不是 AI 产品公司，而是创造者网络<span class="accent">.</span></p>
           <p class="home-about-copy">文案</p>
           <div class="home-principles">
             <div class="home-principle"><span class="eyebrow">Mission</span><strong>文案</strong></div>
             <div class="home-principle"><span class="eyebrow">Vision</span><strong>文案</strong></div>
           </div>
-        </section>
-
-        <section aria-labelledby="home-directory-title">
-          <div class="home-directory-head">
-            <div><div class="section-label">02 / How KOSX Works</div><h2 id="home-directory-title">我们如何创造价值<span class="accent">.</span></h2></div>
-          </div>
-          <div class="home-directory" aria-label="首页三个核心入口">
-            <a class="home-entry nav-trigger" href="./cash-cow-club" data-route="cash-cow-club"><span class="home-entry-top"><span class="index-no">01</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">社群与内容</span><span class="home-entry-description">搞钱研究所 · AI Workshop · 灵感市集</span></span></a>
-            <a class="home-entry nav-trigger" href="./kosx-lab" data-route="kosx-lab"><span class="home-entry-top"><span class="index-no">02</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">项目与交付</span><span class="home-entry-description">KOSX Lab · 真实项目 · 商业成果</span></span></a>
-            <a class="home-entry nav-trigger" href="./members" data-route="members"><span class="home-entry-top"><span class="index-no">03</span><span class="home-entry-arrow">↗</span></span><span class="home-entry-copy"><span class="home-entry-title">人与网络</span><span class="home-entry-description">Members · Mentors · Builders</span></span></a>
-          </div>
-        </section>
-
-        <section class="home-insights-section" aria-labelledby="home-insights-title">
-          <div class="home-insights">
-            <div class="home-insights-intro">
-              <div><div class="kicker">03 / Live signal</div><h2 id="home-insights-title">Insights<br>from X</h2></div>
-              <p>@KOSX.ai 在 X 上的最新动态</p>
+          <div class="about-bento">
+            <div class="bento-featured">
+              <span class="eyebrow">Featured</span>
+              <article class="bento-row"><span class="bento-thumb" aria-hidden="true"></span><div class="bento-row-text"><p class="bento-cat">搞钱研究所周报</p><h3 class="bento-title"></h3></div><span class="home-entry-arrow">↗</span></article>
+              <article class="bento-row"><span class="bento-thumb" aria-hidden="true"></span><div class="bento-row-text"><p class="bento-cat">KOSX Lab 项目案例</p><h3 class="bento-title"></h3></div><span class="home-entry-arrow">↗</span></article>
+              <article class="bento-row"><span class="bento-thumb" aria-hidden="true"></span><div class="bento-row-text"><p class="bento-cat">视频更新</p><h3 class="bento-title"></h3></div><span class="home-entry-arrow">↗</span></article>
             </div>
-            <div class="home-insights-feed" aria-label="X 动态占位">
-              <article class="home-insight-row"><span class="meta">X Post / 01</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
-              <article class="home-insight-row"><span class="meta">X Post / 02</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
-              <article class="home-insight-row"><span class="meta">X Post / 03</span><p>动态文案</p><span class="home-entry-arrow">↗</span></article>
+            <article class="bento-photo"><div class="bento-photo-media" aria-hidden="true"></div><span class="bento-photo-tag">活动回顾</span></article>
+            <article class="bento-photo"><div class="bento-photo-media" aria-hidden="true"></div><span class="bento-photo-tag">活动回顾</span></article>
+            <div class="bento-channels">
+              <span class="bento-channel"><span class="eyebrow">X / Twitter</span><strong>@KOSX.ai 最新动态</strong></span>
+              <span class="bento-channel"><span class="eyebrow">抖音</span><strong></strong></span>
+              <span class="bento-channel"><span class="eyebrow">Bilibili</span><strong></strong></span>
+              <span class="bento-channel"><span class="eyebrow">微信视频号</span><strong></strong></span>
             </div>
           </div>
-        </section>
-
-        <section class="home-latest" aria-labelledby="home-latest-title">
-          <div class="home-feature-head">
-            <div><div class="section-label">04 / Latest</div><h2 id="home-latest-title">最新活动<span class="accent">.</span></h2></div>
-          </div>
-          <div class="event-marquee" aria-label="最新活动，自动循环展示，悬停暂停，点击进入活动页">
+          <div class="event-marquee about-events" aria-label="最新活动，自动循环展示，悬停暂停，点击进入活动页">
             <div class="event-marquee-track">
               <div class="event-marquee-group">
                 <a class="event-card nav-trigger" href="./activities" data-route="activities">
@@ -1020,6 +1119,31 @@
             </div>
           </div>
         </section>
+
+        <section aria-labelledby="home-directory-title">
+          <div class="home-directory-head">
+            <h2 id="home-directory-title" data-i18n-en='How We Create Value<span class="accent">.</span>'>我们如何创造价值<span class="accent">.</span></h2>
+          </div>
+          <div class="works-bento" aria-label="首页三个核心入口与加入入口">
+            <a class="works-cell works-cell-tall nav-trigger" href="./cash-cow-club" data-route="cash-cow-club">
+              <span class="works-visual" aria-hidden="true"></span>
+              <span class="works-cell-text"><span class="works-cell-title">社群与内容</span><span class="works-cell-desc">搞钱研究所 · AI Workshop · 灵感市集</span></span>
+            </a>
+            <a class="works-cell works-cell-tall nav-trigger" href="./kosx-lab" data-route="kosx-lab">
+              <span class="works-visual" aria-hidden="true"></span>
+              <span class="works-cell-text"><span class="works-cell-title">项目与交付</span><span class="works-cell-desc">KOSX Lab · 真实项目 · 商业成果</span></span>
+            </a>
+            <a class="works-cell nav-trigger" href="./members" data-route="members">
+              <span class="works-visual" aria-hidden="true"></span>
+              <span class="works-cell-text"><span class="works-cell-title">人与网络</span><span class="works-cell-desc">Members · Mentors · Builders</span></span>
+            </a>
+            <a class="works-cell works-cell-cta nav-trigger" href="./contact-us" data-route="contact-us">
+              <span class="works-cta-icon" aria-hidden="true">↗</span>
+              <span class="works-cta-text">加入 KOSX</span>
+            </a>
+          </div>
+        </section>
+
       </div>
     </section>
   </main>
@@ -1028,7 +1152,7 @@
     <!-- MEMBERS -->
     <section class="view" data-view="members" aria-labelledby="members-title">
       <div class="page-shell">
-        <header class="page-hero"><div class="section-label">02 / Members</div><h1 id="members-title">我们的<br>成员<span class="accent">.</span></h1></header>
+        <header class="page-hero"><div class="section-label">02 / Members</div><h1 id="members-title" data-i18n-en='Our Members<span class="accent">.</span>'>我们的<br>成员<span class="accent">.</span></h1></header>
         <div class="page-intro"><p>会员机制</p><p>文案</p></div>
         <section class="section">
           <div class="section-head"><div class="section-label">Core Team</div><div><h2>核心团队</h2><p class="lead">文案</p></div></div>
@@ -1056,7 +1180,7 @@
     <!-- ACTIVITIES -->
     <section class="view" data-view="activities" aria-labelledby="activities-title">
       <div class="page-shell">
-        <header class="page-hero"><div class="section-label">03 / Activities</div><h1 id="activities-title">活动与<br>现场<span class="accent">.</span></h1></header>
+        <header class="page-hero"><div class="section-label">03 / Activities</div><h1 id="activities-title" data-i18n-en='Events &amp; Recaps<span class="accent">.</span>'>活动与<br>现场<span class="accent">.</span></h1></header>
         <div class="page-intro"><p>线上与线下发生的连接、讨论和共建。</p><p>文案</p></div>
         <section class="section">
           <div class="tabs" aria-label="活动分类"><span class="chip active">全部</span><span class="chip">线上活动</span><span class="chip">线下活动</span><span class="chip">Something New</span><span class="chip">VersionX</span></div>
@@ -1075,10 +1199,10 @@
     <!-- PARTNERS -->
     <section class="view" data-view="partners" aria-labelledby="partners-title">
       <div class="page-shell">
-        <header class="page-hero"><div class="section-label">04 / Partners</div><h1 id="partners-title">合作<br>伙伴<span class="accent">.</span></h1></header>
+        <header class="page-hero"><div class="section-label">04 / Partners</div><h1 id="partners-title" data-i18n-en='Partners<span class="accent">.</span>'>合作<br>伙伴<span class="accent">.</span></h1></header>
         <div class="page-intro"><p>Vendors / Suppliers / Ecosystem Partners</p><p>文案</p></div>
         <section class="section">
-          <div class="section-head"><div class="section-label">Partner Network</div><div><h2>共同提供<br>真实资源</h2><p class="lead">文案</p></div></div>
+          <div class="section-head"><div class="section-label">Partner Network</div><div><h2 data-i18n-en='Real Resources,<br>Together'>共同提供<br>真实资源</h2><p class="lead">文案</p></div></div>
           <div class="grid four">
             <article class="card"><span class="meta">Vendor / Supplier</span><h3>DingTalk</h3><p>合作内容 · 文案</p></article>
             <article class="card"><span class="meta">Platform</span><h3>Tencent<br>Cloud</h3><p>合作内容 · 文案</p></article>
@@ -1087,7 +1211,7 @@
             <article class="card"><span class="meta">Collaboration</span><h3>Lark</h3><p>合作内容 · 文案</p></article>
             <article class="card"><span class="meta">Partner</span><h3>KOS<br>Solutions</h3><p>合作内容 · 文案</p></article>
             <article class="card"><span class="meta">Community</span><h3>OPC<br>杭州</h3><p>合作内容 · 文案</p></article>
-            <article class="card dark"><span class="meta">Join the network</span><h3>成为合作<br>伙伴</h3><p>文案</p></article>
+            <article class="card dark"><span class="meta">Join the network</span><h3 data-i18n-en='Become a<br>Partner'>成为合作<br>伙伴</h3><p>文案</p></article>
           </div>
         </section>
       </div>
@@ -1096,10 +1220,10 @@
     <!-- CASH COW CLUB -->
     <section class="view" data-view="cash-cow-club" aria-labelledby="club-title">
       <div class="page-shell">
-        <header class="page-hero"><div class="section-label">05 / Cash Cow Club</div><h1 id="club-title">搞钱<br>研究所<span class="accent">.</span></h1></header>
+        <header class="page-hero"><div class="section-label">05 / Cash Cow Club</div><h1 id="club-title" data-i18n-en='Cash Cow Club<span class="accent">.</span>'>搞钱<br>研究所<span class="accent">.</span></h1></header>
         <div class="page-intro"><p>社群根据地、内容产生和对外输出渠道。</p><p>文案</p></div>
         <section class="section">
-          <div class="section-head"><div class="section-label">Content</div><div><h2>内容与<br>信号</h2><p class="lead">文案</p></div></div>
+          <div class="section-head"><div class="section-label">Content</div><div><h2 data-i18n-en='Content &amp;<br>Signals'>内容与<br>信号</h2><p class="lead">文案</p></div></div>
           <div class="grid three">
             <article class="card tall signal"><span class="eyebrow">Weekly</span><div class="placeholder">内容封面</div><div><h3>搞钱研究所周报</h3><p>文案</p></div></article>
             <article class="card tall"><span class="eyebrow">Case Study</span><div class="placeholder">案例封面</div><div><h3>KOSX Lab 项目案例</h3><p>文案</p></div></article>
@@ -1125,7 +1249,7 @@
         <header class="page-hero"><div class="section-label">06 / KOSX Lab</div><h1 id="lab-title">KOSX<br>Lab<span class="accent">.</span></h1></header>
         <div class="page-intro"><p>小型研发中心，将内外部的想法实现落地。</p><p>文案</p></div>
         <section class="section">
-          <div class="section-head"><div class="section-label">Project Roles</div><div><h2>谁在把事情<br>做出来</h2><p class="lead">OPC / 独立开发者 / AI PM / FDE / Design</p></div></div>
+          <div class="section-head"><div class="section-label">Project Roles</div><div><h2 data-i18n-en='The People<br>Making It Happen'>谁在把事情<br>做出来</h2><p class="lead">OPC / 独立开发者 / AI PM / FDE / Design</p></div></div>
           <div class="grid four">
             <article class="card"><span class="index-no">01</span><h3>Project<br>Owner</h3><p>文案</p></article>
             <article class="card"><span class="index-no">02</span><h3>Independent<br>Builder</h3><p>文案</p></article>
@@ -1151,7 +1275,7 @@
     <!-- CONTACT -->
     <section class="view" data-view="contact-us" aria-labelledby="contact-title">
       <div class="page-shell">
-        <header class="page-hero"><div class="section-label">07 / Contact</div><h1 id="contact-title">一起把事情<br>做出来<span class="accent">.</span></h1></header>
+        <header class="page-hero"><div class="section-label">07 / Contact</div><h1 id="contact-title" data-i18n-en='Build It Together<span class="accent">.</span>'>一起把事情<br>做出来<span class="accent">.</span></h1></header>
         <div class="page-intro"><p>加入我们 / 发起企业合作</p><p>文案</p></div>
         <section class="section">
           <div class="form-grid">
@@ -1178,17 +1302,26 @@
   </template>
 
   <footer class="site-footer">
-    <div><img class="footer-logo" src="assets/logo/KOSX logo White.png" alt="KOSX.ai"><p>Connect. Create. Collaborate.<br>Build something real.</p></div>
-    <div class="footer-nav" aria-label="页脚导航">
-      <span class="eyebrow">Explore</span>
-      <a class="nav-trigger" href="./members" data-route="members">成员</a>
-      <a class="nav-trigger" href="./activities" data-route="activities">活动</a>
-      <a class="nav-trigger" href="./partners" data-route="partners">合作伙伴</a>
-      <a class="nav-trigger" href="./kosx-lab" data-route="kosx-lab">KOSX Lab</a>
+    <div class="footer-wordmark" id="footer-wordmark" aria-hidden="true">
+      <canvas class="wordmark-canvas"></canvas>
+      <span class="wordmark-source" data-particle-source><span data-particle-line>KOSX</span></span>
+      <span class="footer-wordmark-static">KOSX</span>
     </div>
-    <div class="footer-nav">
-      <span class="eyebrow">Elsewhere</span>
-      <span>X / Twitter</span><span>抖音</span><span>Bilibili</span><span>微信视频号</span>
+    <div class="footer-main">
+      <div class="footer-links">
+        <div class="footer-nav" aria-label="页脚导航">
+          <span class="eyebrow">Explore</span>
+          <a class="nav-trigger" href="./members" data-route="members">成员</a>
+          <a class="nav-trigger" href="./activities" data-route="activities">活动</a>
+          <a class="nav-trigger" href="./partners" data-route="partners">合作伙伴</a>
+          <a class="nav-trigger" href="./kosx-lab" data-route="kosx-lab">KOSX Lab</a>
+        </div>
+        <div class="footer-nav">
+          <span class="eyebrow">Elsewhere</span>
+          <span>X / Twitter</span><span>抖音</span><span>Bilibili</span><span>微信视频号</span>
+        </div>
+        <p class="footer-slogan">Connect. Create. Collaborate.<br>Build something real.</p>
+      </div>
     </div>
     <div class="footer-bottom"><span>© 2026 KOSX.ai</span><span>Privacy · Terms · ICP</span></div>
   </footer>
@@ -1207,12 +1340,10 @@
     let particleHandle = null;
     let touchStartY = null;
 
-    // 尽早开始加载粒子模块，与 Logo 解码并行；单文件导出版本走内联的 IIFE 全局。
-    const particleModulePromise = introShouldPlay
-      ? (window.KOSXIntroParticles
-          ? Promise.resolve(window.KOSXIntroParticles)
-          : import("./assets/vendor/intro-particles.js").catch(() => null))
-      : Promise.resolve(null);
+    // 粒子模块给开屏和页脚大 Logo 共用；单文件导出版本走内联的 IIFE 全局。
+    const particleModulePromise = window.KOSXIntroParticles
+      ? Promise.resolve(window.KOSXIntroParticles)
+      : import("./assets/vendor/intro-particles.js").catch(() => null);
 
     function removeIntroListeners() {
       document.removeEventListener("keydown", handleIntroKey);
@@ -1338,6 +1469,175 @@
       if (link.dataset.route === currentPage) link.setAttribute("aria-current", "page");
       else link.removeAttribute("aria-current");
     });
+
+    // Hero 中英切换 + 全站词典切换（选择存 localStorage，全站 7 页共享）
+    const heroLangKey = "kosx-hero-lang";
+    const heroTitle = document.getElementById("home-title");
+    const heroSub = document.querySelector(".hero-sub");
+    const heroExplore = document.getElementById("hero-explore");
+    const langOptions = document.querySelectorAll(".lang-option");
+
+    const i18nDict = {
+      "跳至主要内容": "Skip to content",
+      "首页": "Home", "成员": "Members", "活动": "Activities", "合作伙伴": "Partners",
+      "搞钱研究所": "Cash Cow Club", "联系我们 ↗": "Contact ↗",
+      "探索项目": "Explore Projects", "加入团队": "Join the Team",
+      "Built by 这些人": "Built by these people",
+      "搞钱研究所周报": "Cash Cow Club Weekly", "KOSX Lab 项目案例": "KOSX Lab Case Studies",
+      "视频更新": "Video Updates", "活动回顾": "Event Recap",
+      "@KOSX.ai 最新动态": "Latest from @KOSX.ai",
+      "抖音": "Douyin", "微信视频号": "WeChat Channels",
+      "线上活动": "Online", "线下活动": "Offline",
+      "社群与内容": "Community & Content",
+      "搞钱研究所 · AI Workshop · 灵感市集": "Cash Cow Club · AI Workshop · Idea Market",
+      "项目与交付": "Projects & Delivery",
+      "KOSX Lab · 真实项目 · 商业成果": "KOSX Lab · Real Projects · Business Outcomes",
+      "人与网络": "People & Network", "加入 KOSX": "Join KOSX",
+      "会员机制": "Membership", "核心团队": "Core Team",
+      "主理人 + IP": "Founder + IP", "成员姓名": "Name", "角色": "Role",
+      "成员分类": "Member Groups",
+      "Technical Support · 独立开发者 · AI PM · Design / UIUX": "Technical Support · Independent Builders · AI PM · Design / UIUX",
+      "生态伙伴": "Ecosystem Partners", "待定": "TBD",
+      "成员认证 · 共建者等级 · 文案": "Certification · Builder Levels · 文案",
+      "线上与线下发生的连接、讨论和共建。": "Connections, discussions and co-building, online and offline.",
+      "全部": "All", "日期": "Date",
+      "时间 · 地点 · 状态": "Time · Location · Status", "时间 · 平台 · 状态": "Time · Platform · Status",
+      "下一个活动": "Next Up", "杭州": "Hangzhou",
+      "社群根据地、内容产生和对外输出渠道。": "The community home base for content creation and output.",
+      "内容分类": "Topics", "从工具评测到企业 AI 工作流。": "From tool reviews to enterprise AI workflows.",
+      "AI 工具测评": "AI Tool Reviews",
+      "数据库 · 生产力 · 平台 · Agent · AI 硬件": "Databases · Productivity · Platforms · Agents · AI Hardware",
+      "AI 讨论和分享": "AI Talks & Sharing",
+      "播客 · 对话 · 社群观点": "Podcasts · Conversations · Community Voices",
+      "企业 AI 工作流": "Enterprise AI Workflows",
+      "案例 · 方法 · 实践": "Cases · Methods · Practice",
+      "活动 · 教程 · 共同实践": "Events · Tutorials · Co-Practice",
+      "灵感市集": "Idea Market",
+      "想法 · 项目 · 人才 · 商业信号": "Ideas · Projects · Talent · Business Signals",
+      "小型研发中心，将内外部的想法实现落地。": "A small R&D hub turning ideas from inside and out into reality.",
+      "OPC / 独立开发者 / AI PM / FDE / Design": "OPC / Independent Builders / AI PM / FDE / Design",
+      "项目库": "Project Library", "已完成": "Completed", "进行中": "In Progress", "待确认": "Pending",
+      "微信群 AI 助手": "WeChat Group AI Assistant",
+      "参与人 · 成果 · 项目链接": "Contributors · Outcome · Link",
+      "发起人 · 参与人 · 成果": "Initiator · Contributors · Outcome",
+      "AI 项目管理": "AI Project Management",
+      "发起人 · 参与人 · GitHub": "Initiator · Contributors · GitHub",
+      "10 美元 AI 小硬件": "$10 AI Gadget",
+      "发起人 · 参与人 · 当前阶段": "Initiator · Contributors · Current Stage",
+      "Zaelume 电商 SaaS": "Zaelume E-commerce SaaS",
+      "问题 · MVP · 项目链接": "Problem · MVP · Link",
+      "想法 · 发起人 · 所需角色": "Idea · Initiator · Roles Needed",
+      "加入我们 / 发起企业合作": "Join Us / Start a Partnership",
+      "姓名 / 称呼": "Name", "希望参与的角色": "Role You Want", "请选择": "Select",
+      "独立开发者": "Independent Builder", "其他": "Other",
+      "作品或能力说明": "Portfolio or Skills", "提交申请": "Submit Application",
+      "发起企业合作": "Start a Partnership", "姓名 / 机构": "Name / Organization",
+      "合作类型": "Partnership Type", "AI 项目与交付": "AI Projects & Delivery",
+      "人才与招聘": "Talent & Hiring", "平台与工具合作": "Platform & Tools",
+      "活动与生态合作": "Events & Ecosystem", "需求说明": "Brief", "提交需求": "Submit Brief",
+    };
+    const i18nHtmlEls = document.querySelectorAll("[data-i18n-en]");
+    let originalTitle = document.title;
+
+    function applySiteLang(lang) {
+      i18nHtmlEls.forEach((el) => {
+        if (!el.dataset.i18nZh) el.dataset.i18nZh = el.innerHTML;
+        el.innerHTML = lang === "en" ? el.dataset.i18nEn : el.dataset.i18nZh;
+      });
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          const parent = node.parentElement;
+          if (!parent || parent.closest("script, style, [data-i18n-en]")) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        },
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        if (lang === "en") {
+          const trimmed = node.textContent.trim();
+          const en = i18nDict[trimmed];
+          if (en) {
+            if (node.__i18nZh === undefined) node.__i18nZh = node.textContent;
+            node.textContent = node.textContent.replace(trimmed, en);
+          }
+        } else if (node.__i18nZh !== undefined) {
+          node.textContent = node.__i18nZh;
+          delete node.__i18nZh;
+        }
+      });
+      if (lang === "en") {
+        const parts = document.title.split("｜");
+        if (parts.length > 1 && i18nDict[parts[0]]) document.title = `${i18nDict[parts[0]]}｜KOSX.ai`;
+      } else {
+        document.title = originalTitle;
+      }
+    }
+
+    function setHeroLang(lang) {
+      const key = lang === "en" ? "en" : "zh";
+      const dataKey = key === "en" ? "langEn" : "langZh";
+      if (heroTitle && heroTitle.dataset[dataKey]) heroTitle.innerHTML = heroTitle.dataset[dataKey];
+      [heroSub, heroExplore].forEach((el) => {
+        if (!el) return;
+        const value = el.dataset[dataKey];
+        if (value) el.textContent = value;
+      });
+      langOptions.forEach((option) => {
+        const active = option.dataset.lang === key;
+        option.classList.toggle("is-active", active);
+        option.setAttribute("aria-pressed", String(active));
+      });
+      applySiteLang(key);
+      try { window.localStorage.setItem(heroLangKey, key); } catch {}
+    }
+
+    langOptions.forEach((option) => {
+      option.addEventListener("click", () => setHeroLang(option.dataset.lang));
+    });
+    let savedHeroLang = "en";
+    try { savedHeroLang = window.localStorage.getItem(heroLangKey) || "en"; } catch {}
+    setHeroLang(savedHeroLang);
+
+    // Explore：下滑进入行动页（探索项目 / 加入团队）
+    if (heroExplore) {
+      heroExplore.addEventListener("click", () => {
+        const target = document.querySelector(".home-actions");
+        if (!target) return;
+        const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        target.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "start" });
+      });
+    }
+
+    // 页脚粒子大 Logo：滚入视口时聚合，呼应开屏；失败/reduced-motion 显示静态大字
+    // 挂载在整个页脚上：链接列浮于粒子层上方，指针事件经冒泡到达页脚，任意位置都能扰动
+    const footerWordmark = document.getElementById("footer-wordmark");
+    const footerEl = footerWordmark ? footerWordmark.closest(".site-footer") : null;
+    if (footerWordmark && footerEl) {
+      const mountFooterParticles = () => {
+        particleModulePromise.then((mod) => {
+          if (!mod) return;
+          const handle = mod.mountParticleSlogan(footerEl, {
+            color: "#f7f7f5",
+            entranceSeconds: 1.4,
+            scatter: true,
+            textRegionWidth: 0.58,
+          });
+          if (handle) footerEl.classList.add("is-live");
+        });
+      };
+      if ("IntersectionObserver" in window) {
+        const footerObserver = new IntersectionObserver((entries) => {
+          if (entries[0]?.isIntersecting) {
+            footerObserver.disconnect();
+            mountFooterParticles();
+          }
+        }, { rootMargin: "0px 0px -8% 0px" });
+        footerObserver.observe(footerWordmark);
+      } else {
+        mountFooterParticles();
+      }
+    }
   </script>
 </body>
 </html>

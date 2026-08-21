@@ -82,6 +82,9 @@ export function mountParticleSlogan(root, options = {}) {
   const textSource = source;
   const colorOption = options.color || "#f7f7f5";
   const entranceSeconds = options.entranceSeconds || 1.75;
+  const textScale = options.textScale || 1;
+  const scatter = Boolean(options.scatter);
+  const textRegionWidth = options.textRegionWidth || 1;
   root.dataset.particleInitialized = "true";
 
   let renderer;
@@ -171,25 +174,51 @@ export function mountParticleSlogan(root, options = {}) {
     // 多行时做下行阶梯错位：第一行偏左，末行偏右，步进随字号缩放
     const centerIndex = (lines.length - 1) / 2;
     const staggerRatio = 1.2;
-    let fontSize = Math.min(height * (lines.length > 1 ? 0.19 : 0.3), width / 4.5, 132);
-    sampleContext.font = `${weight} ${fontSize}px ${family}`;
-    const extents = lines.map((line, index) => {
-      const lineWidth = sampleContext.measureText(line).width;
-      return lineWidth + 2 * Math.abs(index - centerIndex) * staggerRatio * fontSize;
-    });
-    const needed = Math.max(...extents);
-    if (needed > width * 0.94) {
-      fontSize *= (width * 0.94) / needed;
-      sampleContext.font = `${weight} ${fontSize}px ${family}`;
-    }
 
-    const lineHeight = fontSize * 1.04;
-    const stepX = fontSize * staggerRatio;
-    lines.forEach((line, index) => {
-      const x = width / 2 + (index - centerIndex) * stepX;
-      const y = height / 2 + (index - centerIndex) * lineHeight;
-      sampleContext.fillText(line, x, y);
-    });
+    if (scatter) {
+      // 打散模式：逐字母按预设位置/缩放/旋转绘制，制造不规则排布
+      // textRegionWidth 把文字锚定在画布左侧区域内，指针场仍覆盖整个画布
+      const regionW = width * textRegionWidth;
+      const scatterSpec = [
+        { x: 0.16, y: 0.3, s: 1.45, r: -8 },
+        { x: 0.56, y: 0.22, s: 0.92, r: 6 },
+        { x: 0.4, y: 0.66, s: 1.22, r: -4 },
+        { x: 0.8, y: 0.6, s: 1.05, r: 9 },
+        { x: 0.3, y: 0.42, s: 1.1, r: 5 },
+        { x: 0.68, y: 0.4, s: 1.3, r: -6 },
+      ];
+      const chars = (lines.join("") || "KOSX").split("");
+      const baseSize = Math.min(height * 0.44, regionW / 3.2, 300) * textScale;
+      chars.forEach((ch, index) => {
+        const spec = scatterSpec[index % scatterSpec.length];
+        sampleContext.save();
+        sampleContext.translate(regionW * spec.x, height * spec.y);
+        sampleContext.rotate((spec.r * Math.PI) / 180);
+        sampleContext.font = `${weight} ${baseSize * spec.s}px ${family}`;
+        sampleContext.fillText(ch, 0, 0);
+        sampleContext.restore();
+      });
+    } else {
+      let fontSize = Math.min(height * (lines.length > 1 ? 0.19 : 0.3), width / 4.5, 132) * textScale;
+      sampleContext.font = `${weight} ${fontSize}px ${family}`;
+      const extents = lines.map((line, index) => {
+        const lineWidth = sampleContext.measureText(line).width;
+        return lineWidth + 2 * Math.abs(index - centerIndex) * staggerRatio * fontSize;
+      });
+      const needed = Math.max(...extents);
+      if (needed > width * 0.94) {
+        fontSize *= (width * 0.94) / needed;
+        sampleContext.font = `${weight} ${fontSize}px ${family}`;
+      }
+
+      const lineHeight = fontSize * 1.04;
+      const stepX = fontSize * staggerRatio;
+      lines.forEach((line, index) => {
+        const x = width / 2 + (index - centerIndex) * stepX;
+        const y = height / 2 + (index - centerIndex) * lineHeight;
+        sampleContext.fillText(line, x, y);
+      });
+    }
     const pixels = sampleContext.getImageData(0, 0, width, height).data;
     const mobile = width < 640;
     const cap = mobile ? MAX_PARTICLES_MOBILE : MAX_PARTICLES_DESKTOP;
