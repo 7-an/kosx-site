@@ -305,3 +305,11 @@
 - 范围内变化：`assets/vendor/intro-particles.iife.js`、`assets/vendor/intro-particles.js`、`assets/vendor/intro-particles.src.mjs`、`docs/DECISIONS.md`、`index.html`
 - 检查：npm run check 通过；puppeteer 实测首页首见播聚合、成员页再见直接成形；单文件版重新导出
 - 开工基线：62e001b6689f45ddc5d33df2522379a261becf97
+
+## 2026-08-21T10:00:59.864Z · kimi-k3 · 页脚粒子入场浮现彻底移除：恒 playEntrance:false，任何页面滚到底即成形
+
+- 任务：页脚粒子入场浮现彻底移除
+- 认领范围：`index.html`、`docs/DECISIONS.md`
+- 范围内变化：`docs/DECISIONS.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 首页与成员页滚到底立即截图，字母已成形；单文件版重新导出
+- 开工基线：4f63c19ad19259e6f53f32c24d71c56da26be09b

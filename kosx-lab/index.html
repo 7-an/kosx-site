@@ -1297,22 +1297,17 @@
     const footerWordmark = document.getElementById("footer-wordmark");
     const footerEl = footerWordmark ? footerWordmark.closest(".site-footer") : null;
     if (footerWordmark && footerEl) {
-      // 聚合浮现只在本会话第一次出现；之后各页直接成形
-      const footerSeenKey = "kosx-footer-seen";
-      let footerSeen = false;
-      try { footerSeen = window.sessionStorage.getItem(footerSeenKey) === "1"; } catch {}
+      // 页脚粒子不做入场浮现，滚到即成形（2026-08-21 用户定）
       const mountFooterParticles = () => {
         particleModulePromise.then((mod) => {
           if (!mod) return;
           const handle = mod.mountParticleSlogan(footerEl, {
             color: "#f7f7f5",
-            entranceSeconds: 1.4,
             scatter: true,
             textRegionWidth: 0.58,
-            playEntrance: !footerSeen,
+            playEntrance: false,
           });
           if (handle) footerEl.classList.add("is-live");
-          try { window.sessionStorage.setItem(footerSeenKey, "1"); } catch {}
         });
       };
       if ("IntersectionObserver" in window) {
