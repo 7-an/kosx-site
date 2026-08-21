@@ -85,6 +85,7 @@ export function mountParticleSlogan(root, options = {}) {
   const textScale = options.textScale || 1;
   const scatter = Boolean(options.scatter);
   const textRegionWidth = options.textRegionWidth || 1;
+  const playEntrance = options.playEntrance !== false;
   root.dataset.particleInitialized = "true";
 
   let renderer;
@@ -598,7 +599,7 @@ export function mountParticleSlogan(root, options = {}) {
   document.addEventListener("visibilitychange", handleVisibility);
   renderCanvas.addEventListener("webglcontextlost", handleContextLost);
 
-  resize(true);
+  resize(playEntrance);
   window.setTimeout(() => {
     initialBuildComplete = true;
   }, entranceSeconds * 1000 + 50);

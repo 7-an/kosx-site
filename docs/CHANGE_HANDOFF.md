@@ -297,3 +297,11 @@
 - 范围内变化：`docs/DECISIONS.md`、`index.html`
 - 检查：npm run check 通过（含 build）；puppeteer 验证首页 about 英文、成员页英文、联系我们页中文还原；单文件版重新导出
 - 开工基线：507fcc15996e86dc69a00efc039bc5f16d497d15
+
+## 2026-08-21T09:32:34.352Z · kimi-k3 · 页脚粒子聚合浮现改为每会话只播一次（playEntrance 开关 + sessionStorage 记录）；之后页面直接成形
+
+- 任务：页脚粒子聚合动画只播一次（session 级）
+- 认领范围：`index.html`、`assets/vendor`、`docs/DECISIONS.md`
+- 范围内变化：`assets/vendor/intro-particles.iife.js`、`assets/vendor/intro-particles.js`、`assets/vendor/intro-particles.src.mjs`、`docs/DECISIONS.md`、`index.html`
+- 检查：npm run check 通过；puppeteer 实测首页首见播聚合、成员页再见直接成形；单文件版重新导出
+- 开工基线：62e001b6689f45ddc5d33df2522379a261becf97

@@ -1289,6 +1289,10 @@
     const footerWordmark = document.getElementById("footer-wordmark");
     const footerEl = footerWordmark ? footerWordmark.closest(".site-footer") : null;
     if (footerWordmark && footerEl) {
+      // 聚合浮现只在本会话第一次出现；之后各页直接成形
+      const footerSeenKey = "kosx-footer-seen";
+      let footerSeen = false;
+      try { footerSeen = window.sessionStorage.getItem(footerSeenKey) === "1"; } catch {}
       const mountFooterParticles = () => {
         particleModulePromise.then((mod) => {
           if (!mod) return;
@@ -1297,8 +1301,10 @@
             entranceSeconds: 1.4,
             scatter: true,
             textRegionWidth: 0.58,
+            playEntrance: !footerSeen,
           });
           if (handle) footerEl.classList.add("is-live");
+          try { window.sessionStorage.setItem(footerSeenKey, "1"); } catch {}
         });
       };
       if ("IntersectionObserver" in window) {
